@@ -1,4 +1,4 @@
-export default function Bottom() {
+export default function Footer() {
   return (
     <footer className="bg-[#1E293B] text-white">
       <div className="mx-auto w-full max-w-screen-xl p-12">
