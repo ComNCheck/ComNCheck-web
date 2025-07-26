@@ -3,7 +3,7 @@ import EventCardList from "./components/EventCardList";
 
 export default function Main() {
   return (
-    <div className="min-h-screen text-black bg-white flex flex-col items-left justify-left py-12">
+    <div className="min-h-screen text-black bg-white flex flex-col items-left justify-left py-12 pt-24">
       <div className="w-full h-full max-w-5xl mx-auto px-8">
         <TitleAndDescription
           title={"이예림님,\n올해가 58% 지나갔어요!"}
