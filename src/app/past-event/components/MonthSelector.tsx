@@ -13,9 +13,7 @@ export default function MonthSelector() {
             key={month}
             onClick={() => setSelectedMonth(month)}
             className={`text-center p-2 w-16 h-9  text-sm font-semibold rounded-[50px] ${
-              isSelected
-                ? "bg-[#0077ff] text-white"
-                : "bg-[#E3E3E3] text-[#3a3a3a]"
+              isSelected ? "bg-point text-white" : "bg-[#E3E3E3] text-[#3a3a3a]"
             }`}
           >
             {month}월
