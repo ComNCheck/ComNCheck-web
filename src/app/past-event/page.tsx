@@ -6,12 +6,14 @@ import MonthSelector from "./components/MonthSelector";
 import PastEventCard from "./components/PastEventCard";
 import { useState } from "react";
 import pastEventData from "@/apis/PastEvent.json";
+import Checklist from "./components/Checklist";
 interface PastEventItem {
   title: string;
   description: string;
   month: string;
   sort: string;
 }
+
 export default function PastEvent() {
   const [currentSelectedMonths, setCurrentSelectedMonths] = useState<number[]>(
     []
@@ -35,24 +37,31 @@ export default function PastEvent() {
         <Dropdown />
       </div>
       <div className="w-full h-0.5 bg-black my-4"></div>
-      <div className="flex flex-row items-center pl-60">
-        <div className="flex flex-col w-[45%] gap-4">
+      <div className="flex flex-row items-start pl-60 gap-5">
+        <div className="flex flex-col w-[50%] gap-4 ">
           <MonthSelector onMonthSelect={handleMonthSelect} />
-          {filteredEvents.length > 0 ? (
-            filteredEvents.map((event, index) => (
-              <PastEventCard
-                key={index}
-                title={event.title}
-                description={event.description}
-              />
-            ))
-          ) : (
-            <p className="text-gray-500 text-center py-4">
-              선택된 월에 해당하는 이벤트가 없습니다.
-            </p>
-          )}
+          <div className="min-h-[300px] gap-4">
+            {filteredEvents.length > 0 ? (
+              filteredEvents.map((event, index) => (
+                <PastEventCard
+                  key={index}
+                  title={event.title}
+                  description={event.description}
+                />
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-4">
+                선택된 월에 해당하는 행사가 없습니다.
+              </p>
+            )}
+          </div>
         </div>
-        <div>체크리스트</div>
+        <div className="w-[35%] h-full">
+          <Checklist
+            title="강의실 대관"
+            content="강의실 대관은 어디에서 진행하면 되고, ~"
+          />
+        </div>
       </div>
     </div>
   );
