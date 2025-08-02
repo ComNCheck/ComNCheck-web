@@ -2,23 +2,24 @@
 import { useState } from "react";
 
 interface ChecklistItemProps {
+  tip: string;
   title: string;
   content: string;
 }
 
-const Checklist: React.FC<ChecklistItemProps> = ({ title, content }) => {
+const Checklist: React.FC<ChecklistItemProps> = ({ title, content, tip }) => {
   const [isChecked, setIsChecked] = useState(false);
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
   return (
     <div className="flex flex-col items-start gap-4 py-4 px-6 bg-gray-100 h-auto rounded-4xl ">
-      <div className="border-b-1 border-gray-300">
-        <h1 className="text-4xl text-black font-extrabold">Check List</h1>
-        <div className="text-[#707070] font-reqular text-sm mb-2">
-          내용입니다내용입니다내용입니다내용입니다내용입니다내용입니다
-        </div>
+      <div>
+        <h1 className="text-4xl text-black font-extrabold">행사 준비 TIP</h1>
+        <div className="text-[#707070] font-reqular text-sm mt-2">{tip}</div>
       </div>
+      <div className="w-full h-0.5 bg-[#DFDFDF]"></div>
+      <h1 className="text-4xl text-black font-extrabold">Check List</h1>
       <div className="flex flex-col w-full h-22 py-2 px-4 gap-2 rounded-xl bg-[#E2E2E2]">
         <div className="flex flex-row items-center gap-2 py-1 border-b-1 border-[#CECECE]">
           <input
