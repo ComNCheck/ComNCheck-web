@@ -12,16 +12,22 @@ type OptionType = {
   icon: JSX.Element;
 };
 const options: OptionType[] = [
+  { label: "할일별", icon: <BiCalendarStar className="w-6 h-6" /> },
   { label: "연도별", icon: <BiCalendar className="w-6 h-6" /> },
   { label: "행사별", icon: <BiCalendarCheck className="w-6 h-6" /> },
-  { label: "할일별", icon: <BiCalendarStar className="w-6 h-6" /> },
 ];
-export default function Dropdown() {
+interface DropdownProps {
+  onSelect: (label: string) => void;
+}
+export default function Dropdown({ onSelect }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState<OptionType>(options[0]);
+  const [selected, setSelected] = useState<OptionType>(
+    options.find((option) => option.label === "할일별") || options[0]
+  );
   const handleSelect = (option: OptionType) => {
     setSelected(option);
     setIsOpen(false);
+    onSelect(option.label);
   };
   return (
     <div>
