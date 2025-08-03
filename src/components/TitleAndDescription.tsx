@@ -15,15 +15,13 @@ const TitleAndDescription: React.FC<TitleAndDescriptionProps> = ({
         <h1
           key={idx}
           className={
-            idx === 0
-              ? "text-4xl md:text-5xl font-bold mb-1"
-              : "text-4xl md:text-5xl font-bold mb-2"
+            idx === 0 ? "text-3xl font-bold mb-1" : "text-3xl font-bold mb-2"
           }
         >
           {line}
         </h1>
       ))}
-      <p className="text-xl md:text-2xl font-medium ">
+      <p className="text-xl font-medium ">
         {description
           .split(".")
           .filter((sentence) => sentence.trim())

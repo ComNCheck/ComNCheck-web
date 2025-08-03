@@ -73,7 +73,7 @@ export default function PastEvent() {
     ],
   };
   return (
-    <div className="min-h-screen text-black bg-white flex flex-col items-left justify-left py-12 pt-24 ">
+    <div className="min-h-screen text-black bg-white flex flex-col items-left justify-left py-12 ">
       <div className="w-[70%] mx-auto">
         <TitleAndDescription
           title="이제까지 이런 행사들을 진행했어요!"

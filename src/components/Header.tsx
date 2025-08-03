@@ -17,11 +17,11 @@ export default function Header() {
             className="object-contain"
           />
         </Link>
-        <div className="flex items-center justify-between font-semibold lg:text-xl text-sm lg:gap-4 gap-2">
+        <div className="flex items-center justify-between font-semibold lg:text-base text-sm lg:gap-4 gap-8">
           <div>인수인계</div>
           <div>행사일정</div>
           <div>행사투표</div>
-          <BiUserCircle className="text-2xl" />
+          <BiUserCircle className="text-xl" />
         </div>
       </div>
     </header>
