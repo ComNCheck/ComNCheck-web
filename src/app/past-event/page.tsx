@@ -82,12 +82,20 @@ export default function PastEvent() {
       { item: "전체", sort: "연도별" },
       { item: "2025", sort: "연도별" },
       { item: "2024", sort: "연도별" },
+      { item: "2023", sort: "연도별" },
+      { item: "2022", sort: "연도별" },
     ],
     행사별: [
       { item: "전체", sort: "행사별" },
-      { item: "OT", sort: "행사별" },
+      { item: "새내기 배움터", sort: "행사별" },
+      { item: "개강/종강총회", sort: "행사별" },
+      { item: "대면식", sort: "행사별" },
+      { item: "간식행사", sort: "행사별" },
       { item: "MT", sort: "행사별" },
+      { item: "해오름식", sort: "행사별" },
+      { item: "체전", sort: "행사별" },
       { item: "축제", sort: "행사별" },
+      { item: "홈커밍 데이", sort: "행사별" },
     ],
   };
 

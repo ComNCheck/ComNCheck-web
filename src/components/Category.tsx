@@ -21,10 +21,10 @@ export default function Category({ categoryList, onSelect }: CategoryProps) {
         <div
           key={idx}
           onClick={() => handleClick(item)}
-          className={`w-auto h-9 rounded-sm py-1 px-6 border-1 border-[#E3E3E3] ${
+          className={`flex items-center justify-center px-2 h-9 rounded-sm text-center cursor-pointer border-1 border-[#E3E3E3] ${
             isSelected.item === item.item
               ? "bg-[#3A3A3A] text-white"
-              : "bg-white text-[#3A3A3A]"
+              : "bg-white text-[#3A3A3A] hover:bg-gray-100"
           }`}
         >
           {item.item}
