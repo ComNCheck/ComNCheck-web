@@ -8,7 +8,7 @@ const cardData = [
   {
     title: "이제까지 이런 행사들을 진행했어요!",
     description: "예전 기수 학생회 분들이 했었던 행사들을 확인할 수 있어요.",
-    path: "/",
+    path: "/past-event",
   },
   {
     title: "행사 일정을 달력으로 한눈에 확인해요",

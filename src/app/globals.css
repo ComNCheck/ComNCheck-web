@@ -1,19 +1,11 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --point: #0077ff;
-  --sublight: #daebff;
-  --semilight: #bedcff;
-}
-
-@theme inline {
+/* @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
+} */
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -21,7 +13,14 @@
     --foreground: #ededed;
   }
 }
-
+@theme {
+  --font-PThin: Pretendard-Thin;
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-point: #0077ff;
+  --color-sublight: #daebff;
+  --color-semilight: #bedcff;
+}
 @font-face {
   font-family: "Pretendard";
   src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");
