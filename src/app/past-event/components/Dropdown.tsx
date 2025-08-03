@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BiCalendar,
   BiCalendarCheck,
@@ -18,12 +18,20 @@ const options: OptionType[] = [
 ];
 interface DropdownProps {
   onSelect: (label: string) => void;
+  selectedSort: string;
 }
-export default function Dropdown({ onSelect }: DropdownProps) {
+export default function Dropdown({ onSelect, selectedSort }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<OptionType>(
     options.find((option) => option.label === "할일별") || options[0]
   );
+  useEffect(() => {
+    const found = options.find((option) => option.label === selectedSort);
+    if (found && found.label !== selected.label) {
+      setSelected(found);
+    }
+  }, [selectedSort]);
+
   const handleSelect = (option: OptionType) => {
     setSelected(option);
     setIsOpen(false);

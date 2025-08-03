@@ -9,7 +9,8 @@ interface CategoryProps {
   onSelect: (selectedItem: string) => void;
 }
 export default function Category({ categoryList, onSelect }: CategoryProps) {
-  const [isSelected, setIsSelected] = useState<CategoryItem | "전체">("전체");
+  const [isSelected, setIsSelected] = useState<CategoryItem>(categoryList[0]);
+
   const handleClick = (item: CategoryItem) => {
     setIsSelected(item);
     onSelect(item.item);
@@ -21,7 +22,7 @@ export default function Category({ categoryList, onSelect }: CategoryProps) {
           key={idx}
           onClick={() => handleClick(item)}
           className={`w-auto h-9 rounded-sm py-1 px-6 border-1 border-[#E3E3E3] ${
-            isSelected !== "전체" && isSelected.item === item.item
+            isSelected.item === item.item
               ? "bg-[#3A3A3A] text-white"
               : "bg-white text-[#3A3A3A]"
           }`}

@@ -3,6 +3,18 @@
     "title": "새내기 배움터 준비",
     "description": "새내기배움터 같은 경우 2월말에 행사가 진행하지만, 집부들이 쉽게 못 모이..",
     "month": "1월",
-    "sort": "ready"
+    "sort": "할일별"
+  },
+  {
+    "title": "MT 준비",
+    "description": "2025년 3월 26일 (목)",
+    "event": "MT",
+    "sort": "행사별"
+  },
+  {
+    "title": "MT 준비",
+    "description": "2025년 3월 26일 (목)",
+    "year": "2025",
+    "sort": "연도별"
   }
 ]
