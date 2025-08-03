@@ -102,7 +102,7 @@ export default function PastEvent() {
   if (!isReady) return null; // searchParams 준비될 때까지 렌더링 지연
 
   return (
-    <div className="min-h-screen text-black bg-white flex flex-col items-left justify-left py-12 ">
+    <div className="min-h-screen text-black bg-white flex flex-col items-left justify-left py-12">
       <div className="w-full md:w-[70%] mx-auto p-5">
         <TitleAndDescription
           title="이제까지 이런 행사들을 진행했어요!"
