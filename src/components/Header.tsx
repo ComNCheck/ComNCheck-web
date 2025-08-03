@@ -17,7 +17,7 @@ export default function Header() {
             className="object-contain"
           />
         </Link>
-        <div className="flex items-center justify-between font-semibold lg:text-base text-sm lg:gap-4 gap-8">
+        <div className="flex items-center justify-between font-semibold lg:text-base text-xs md:text-sm lg:gap-4 gap-8">
           <div>인수인계</div>
           <div>행사일정</div>
           <div>행사투표</div>

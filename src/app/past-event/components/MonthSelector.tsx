@@ -1,16 +1,22 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 interface MonthSelectorProps {
   onMonthSelect: (selectedMonths: number[]) => void;
 }
 export default function MonthSelector({ onMonthSelect }: MonthSelectorProps) {
-  const [selectedMonth, setSelectedMonth] = useState<number[]>([]);
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
   const groupedMonths = [
     [1, 2],
     [3, 4],
     [6, 7, 8],
   ];
+  const [selectedMonth, setSelectedMonth] = useState<number[]>(
+    groupedMonths[0]
+  );
+  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+  useEffect(() => {
+    onMonthSelect(selectedMonth); // 초기 마운트 시 선택값 전달
+  }, []);
   const getSelectedGroup = (month: number): number[] => {
     for (const group of groupedMonths) {
       if (group.includes(month)) return group;
