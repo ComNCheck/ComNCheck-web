@@ -40,7 +40,7 @@ export default function Dropdown({ onSelect, selectedSort }: DropdownProps) {
   return (
     <div>
       <div
-        className="flex flex-row items-center w-32 h-11 px-3 py-2 gap-0.5 bg-white border-1 border-[#64758B] rounded-full"
+        className="flex flex-row items-center w-32 h-11 px-3 py-2 gap-0.5 bg-white border-1 border-[#64758B] rounded-full cursor-pointer"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <div className="flex items-center gap-2 ">
