@@ -103,7 +103,7 @@ export default function PastEvent() {
 
   return (
     <div className="min-h-screen text-black bg-white flex flex-col items-left justify-left py-12 ">
-      <div className="w-[70%] mx-auto">
+      <div className="w-full md:w-[70%] mx-auto p-5">
         <TitleAndDescription
           title="이제까지 이런 행사들을 진행했어요!"
           description="예전 기수 학생회 분들이 했었던 행사들을 확인할 수 있어요."
@@ -113,10 +113,10 @@ export default function PastEvent() {
       </div>
       <div className="w-full h-0.5 bg-black my-4"></div>
 
-      <div className="flex flex-row items-start pl-60 gap-5">
+      <div className="flex flex-col p-4 md:flex-row items-start md:pl-40 lg:pl-[15%] gap-5">
         {currentSort === "할일별" && (
           <>
-            <div className="flex flex-col w-[50%] gap-4 ">
+            <div className="flex flex-col w-full md:w-[50%] gap-4 ">
               <MonthSelector onMonthSelect={handleMonthSelect} />
               <div className="min-h-[300px] gap-4">
                 {filteredEvents.length > 0 ? (
@@ -134,7 +134,7 @@ export default function PastEvent() {
                 )}
               </div>
             </div>
-            <div className="w-[35%] h-full">
+            <div className="md:w-[35%] h-full">
               <Checklist
                 title="강의실 대관"
                 content="강의실 대관은 어디에서 진행하면 되고, ~"
@@ -147,7 +147,7 @@ export default function PastEvent() {
         )}
 
         {(currentSort === "연도별" || currentSort === "행사별") && (
-          <div className="flex flex-col w-[80%] gap-4">
+          <div className="flex flex-col w-full px-5 md:w-[80%] gap-4">
             <Category
               categoryList={categoryList[currentSort]}
               onSelect={handleCategorySelect}

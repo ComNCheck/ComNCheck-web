@@ -16,7 +16,7 @@ export default function Category({ categoryList, onSelect }: CategoryProps) {
     onSelect(item.item);
   };
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-wrap gap-2">
       {categoryList.map((item, idx) => (
         <div
           key={idx}
