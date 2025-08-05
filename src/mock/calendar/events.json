@@ -3,35 +3,35 @@
     {
       "id": 1,
       "eventName": "학과 오리엔테이션",
-      "date": "2025-03-01",
+      "date": "2025-08-01",
       "location": "대강당",
       "description": "신입생을 위한 학과 소개 및 안내"
     },
     {
       "id": 2,
       "eventName": "신입생 환영회",
-      "date": "2025-03-15",
+      "date": "2025-08-5",
       "location": "학생회관",
       "description": "신입생과 선배들의 교류 행사"
     },
     {
       "id": 3,
       "eventName": "봄 축제",
-      "date": "2025-04-20",
+      "date": "2025-08-20",
       "location": "캠퍼스 전체",
       "description": "봄을 맞이하는 대학 축제"
     },
     {
       "id": 4,
       "eventName": "학술제",
-      "date": "2025-05-20",
+      "date": "2025-08-20",
       "location": "도서관",
       "description": "학생들의 연구 성과 발표"
     },
     {
       "id": 5,
       "eventName": "동아리 박람회",
-      "date": "2025-06-10",
+      "date": "2025-08-10",
       "location": "학생회관 앞",
       "description": "각 동아리 소개 및 신입 모집"
     }
@@ -40,35 +40,35 @@
     {
       "id": 6,
       "eventName": "졸업식",
-      "date": "2025-02-20",
+      "date": "2025-08-20",
       "location": "대강당",
       "description": "졸업생을 위한 졸업식"
     },
     {
       "id": 7,
       "eventName": "입학식",
-      "date": "2025-03-02",
+      "date": "2025-08-02",
       "location": "대강당",
       "description": "신입생 입학식"
     },
     {
       "id": 8,
       "eventName": "체육대회",
-      "date": "2025-09-15",
+      "date": "2025-08-15",
       "location": "운동장",
       "description": "학과간 체육대회"
     },
     {
       "id": 9,
       "eventName": "가을 축제",
-      "date": "2025-10-25",
+      "date": "2025-8-25",
       "location": "캠퍼스 전체",
       "description": "가을 축제"
     },
     {
       "id": 10,
       "eventName": "겨울 축제",
-      "date": "2025-12-15",
+      "date": "2025-8-15",
       "location": "학생회관",
       "description": "연말을 맞이하는 겨울 축제"
     }

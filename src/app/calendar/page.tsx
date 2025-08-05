@@ -1,8 +1,30 @@
+"use client";
+
+import { useState } from "react";
 import TitleAndDescription from "@/components/TitleAndDescription";
 import CalendarComponent from "./components/Calendar";
 import EventCheck from "./components/EventCheck";
+import { majorEventItem } from "@/mock/calendar/api";
 
 export default function Calendar() {
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedEvents, setSelectedEvents] = useState<majorEventItem[]>([]);
+  const [showOnlySelected, setShowOnlySelected] = useState(false);
+
+  const handleSelectedEventsChange = (events: majorEventItem[]) => {
+    setSelectedEvents(events);
+  };
+
+  const handleFixButtonClick = () => {
+    if (selectedEvents.length > 0) {
+      setShowOnlySelected(true);
+    }
+  };
+
+  const handleResetView = () => {
+    setShowOnlySelected(false);
+  };
+
   return (
     <div className="min-h-screen text-black bg-white flex flex-col items-left justify-left py-12">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -15,18 +37,57 @@ export default function Calendar() {
 
         <div className="flex gap-8 mt-8">
           <div className="flex-1">
-            <CalendarComponent />
+            <CalendarComponent
+              onDateSelect={setSelectedDate}
+              selectedEvents={selectedEvents}
+              showOnlySelected={showOnlySelected}
+            />
           </div>
 
-          <EventCheck />
+          <EventCheck
+            selectedDate={selectedDate}
+            onSelectedEventsChange={handleSelectedEventsChange}
+          />
         </div>
+
         <div className="mt-6">
-          <button className="w-full bg-[#0077FF] text-white py-3 rounded-lg font-medium">
-            행사 일정 픽스
-          </button>
-          <p className="text-xs text-gray-500 mt-2 text-left">
-            * 완료된 일정은 행사 일정 픽스를 눌러주세요. 버튼을 누르면
-          </p>
+          {showOnlySelected ? (
+            <div className="space-y-3">
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="text-green-800 font-medium mb-2">
+                  ✅ 행사 일정이 픽스되었습니다!
+                </div>
+                <div className="text-sm text-green-700">
+                  선택된 {selectedEvents.length}개의 행사만 달력에 표시됩니다.
+                </div>
+              </div>
+              <button
+                onClick={handleResetView}
+                className="w-full bg-gray-500 text-white py-3 rounded-lg font-medium hover:bg-gray-600 transition-colors"
+              >
+                전체 일정 보기로 돌아가기
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <button
+                onClick={handleFixButtonClick}
+                disabled={selectedEvents.length === 0}
+                className={`w-full py-3 rounded-lg font-medium transition-colors ${
+                  selectedEvents.length > 0
+                    ? "bg-[#0077FF] text-white hover:bg-blue-600"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+              >
+                {selectedEvents.length > 0
+                  ? `선택된 ${selectedEvents.length}개 행사 일정 픽스`
+                  : "행사 일정 픽스"}
+              </button>
+              <p className="text-xs text-gray-500 mt-2 text-left">
+                * 오른쪽 클릭으로 행사를 선택한 후 픽스 버튼을 눌러주세요.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

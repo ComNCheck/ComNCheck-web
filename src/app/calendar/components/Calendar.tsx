@@ -13,7 +13,17 @@ interface CalendarEvent {
   buttonText: string;
 }
 
-export default function CalendarComponent() {
+interface CalendarComponentProps {
+  onDateSelect?: (date: Date | undefined) => void;
+  selectedEvents?: majorEventItem[];
+  showOnlySelected?: boolean;
+}
+
+export default function CalendarComponent({
+  onDateSelect,
+  selectedEvents = [],
+  showOnlySelected = false,
+}: CalendarComponentProps) {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
@@ -47,9 +57,16 @@ export default function CalendarComponent() {
     fetchEvents();
   }, []);
 
+  // 표시할 이벤트 결정 (선택된 이벤트만 표시하거나 모든 이벤트 표시)
+  const displayEvents = showOnlySelected
+    ? events.filter((event) =>
+        selectedEvents.some((selected) => selected.id === event.id)
+      )
+    : events;
+
   // 캘린더에 표시할 날짜에 행사 있는지 확인
   function isEventDay(date: Date) {
-    return events.some(
+    return displayEvents.some(
       (e) =>
         new Date(e.date).getFullYear() === date.getFullYear() &&
         new Date(e.date).getMonth() === date.getMonth() &&
@@ -57,12 +74,32 @@ export default function CalendarComponent() {
     );
   }
 
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    onDateSelect?.(date);
+  };
+
   return (
     <div className="w-full flex flex-col items-center justify-center">
+      {showOnlySelected && selectedEvents.length > 0 && (
+        <div className="mb-4 p-3 bg-blue-50 rounded-lg w-full max-w-md">
+          <div className="text-sm font-medium text-blue-800 mb-2">
+            선택된 행사만 표시 중 ({selectedEvents.length}개)
+          </div>
+          <div className="space-y-1">
+            {selectedEvents.map((event) => (
+              <div key={event.id} className="text-xs text-blue-700">
+                {event.eventName}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <Calendar
         mode="single"
         selected={selectedDate}
-        onSelect={setSelectedDate}
+        onSelect={handleDateSelect}
         month={new Date()}
         modifiers={{
           event: isEventDay,

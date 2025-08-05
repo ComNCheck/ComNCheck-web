@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 interface CalendarProps {
   mode?: "single";
@@ -100,7 +101,7 @@ export function Calendar({
           }
           className="p-2 hover:bg-gray-100 rounded text-gray-600"
         >
-          ←
+          <IoIosArrowBack />
         </button>
         <h2 className="text-xl font-semibold text-gray-900">
           {currentMonth.getFullYear()}년 {monthNames[currentMonth.getMonth()]}
@@ -113,7 +114,7 @@ export function Calendar({
           }
           className="p-2 hover:bg-gray-100 rounded text-gray-600"
         >
-          →
+          <IoIosArrowForward />
         </button>
       </div>
 
