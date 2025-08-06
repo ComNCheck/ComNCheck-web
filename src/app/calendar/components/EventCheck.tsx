@@ -171,15 +171,15 @@ export default function EventCheck({
   }, []);
 
   return (
-    <div className="w-80 relative">
-      <div className="bg-white border border-gray-200 rounded-lg p-6">
+    <div className="w-full lg:w-80 relative">
+      <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
         {selectedDate ? (
           <>
-            <div className="mb-4 flex justify-between items-center">
-              <div className="text-lg font-bold text-black">
+            <div className="mb-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+              <div className="text-base sm:text-lg font-bold text-black">
                 | {formatDate(selectedDate)}
               </div>
-              <div className="text-sm text-gray-400">
+              <div className="text-xs sm:text-sm text-gray-400">
                 {calculateDday(selectedDate)}
               </div>
             </div>
@@ -207,11 +207,13 @@ export default function EventCheck({
                       }
                     }}
                   >
-                    <div className="text-black flex-1">{event.eventName}</div>
+                    <div className="text-black flex-1 text-sm sm:text-base truncate">
+                      {event.eventName}
+                    </div>
                     {isEventSelected(event) && (
-                      <div className="ml-2 text-blue-600">
+                      <div className="ml-2 text-blue-600 flex-shrink-0">
                         <svg
-                          className="w-5 h-5"
+                          className="w-4 h-4 sm:w-5 sm:h-5"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -226,7 +228,7 @@ export default function EventCheck({
                   </div>
                 ))
               ) : (
-                <div className="text-gray-500 text-center py-4">
+                <div className="text-gray-500 text-center py-4 text-sm sm:text-base">
                   해당 날짜에 예정된 행사가 없습니다.
                 </div>
               )}
@@ -234,7 +236,7 @@ export default function EventCheck({
 
             {selectedEvents.length > 0 && (
               <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-                <div className="text-sm font-medium text-blue-800 mb-2">
+                <div className="text-xs sm:text-sm font-medium text-blue-800 mb-2">
                   선택된 행사 ({selectedEvents.length}개)
                 </div>
                 <div className="space-y-1">
@@ -243,10 +245,10 @@ export default function EventCheck({
                       key={event.id}
                       className="text-xs text-blue-700 flex justify-between items-center"
                     >
-                      <span>{event.eventName}</span>
+                      <span className="truncate flex-1">{event.eventName}</span>
                       <button
                         onClick={() => handleDeselect(event)}
-                        className="text-red-500 hover:text-red-700"
+                        className="text-red-500 hover:text-red-700 ml-2 flex-shrink-0"
                       >
                         ×
                       </button>
@@ -258,7 +260,7 @@ export default function EventCheck({
           </>
         ) : (
           <div className="text-center py-8">
-            <div className="text-gray-500 mb-4">
+            <div className="text-gray-500 mb-4 text-sm sm:text-base">
               달력에서 날짜를 선택해주세요
             </div>
           </div>
@@ -266,12 +268,12 @@ export default function EventCheck({
 
         <button
           onClick={() => router.push("/calendar/addEvent")}
-          className="w-full bg-gray-100 text-black py-3 rounded flex items-center justify-center space-x-2 hover:bg-gray-200 transition-colors duration-200"
+          className="w-full bg-gray-100 text-black py-3 sm:py-4 rounded flex items-center justify-center space-x-2 hover:bg-gray-200 transition-colors duration-200"
         >
-          <div className="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center">
-            <FaCirclePlus />
+          <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gray-600 rounded-full flex items-center justify-center">
+            <FaCirclePlus className="w-3 h-3 sm:w-4 sm:h-4" />
           </div>
-          <span className="text-sm">행사일정 추가하기</span>
+          <span className="text-xs sm:text-sm">행사일정 추가하기</span>
         </button>
       </div>
 
@@ -279,7 +281,7 @@ export default function EventCheck({
       {contextMenuPosition && (
         <div
           ref={contextMenuRef}
-          className="absolute z-50 bg-white border border-gray-200 rounded-lg shadow-lg py-1 min-w-[120px]"
+          className="absolute z-50 bg-white border border-gray-200 rounded-lg shadow-lg py-1 min-w-[120px] sm:min-w-[140px]"
           style={{
             left: contextMenuPosition.x,
             top: contextMenuPosition.y,
@@ -287,10 +289,10 @@ export default function EventCheck({
         >
           <button
             onClick={handleSelect}
-            className="w-full px-4 py-2 text-left text-sm hover:bg-blue-50 text-blue-600 flex items-center"
+            className="w-full px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-blue-50 text-blue-600 flex items-center"
           >
             <svg
-              className="w-4 h-4 mr-2"
+              className="w-3 h-3 sm:w-4 sm:h-4 mr-2"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -304,10 +306,10 @@ export default function EventCheck({
           </button>
           <button
             onClick={handleDelete}
-            className="w-full px-4 py-2 text-left text-sm hover:bg-red-50 text-red-600 flex items-center"
+            className="w-full px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-red-50 text-red-600 flex items-center"
           >
             <svg
-              className="w-4 h-4 mr-2"
+              className="w-3 h-3 sm:w-4 sm:h-4 mr-2"
               fill="currentColor"
               viewBox="0 0 20 20"
             >

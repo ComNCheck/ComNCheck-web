@@ -10,18 +10,20 @@ const TitleAndDescription: React.FC<TitleAndDescriptionProps> = ({
   description,
 }) => {
   return (
-    <div className="mb-4">
+    <div className="mb-4 sm:mb-6 lg:mb-8">
       {title.split("\n").map((line, idx) => (
         <h1
           key={idx}
           className={
-            idx === 0 ? "text-3xl font-bold mb-1" : "text-3xl font-bold mb-2"
+            idx === 0
+              ? "text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2"
+              : "text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3"
           }
         >
           {line}
         </h1>
       ))}
-      <p className="text-xl font-medium ">
+      <p className="text-base sm:text-lg md:text-xl font-medium">
         {description
           .split(".")
           .filter((sentence) => sentence.trim())

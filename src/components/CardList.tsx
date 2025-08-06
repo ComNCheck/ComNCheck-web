@@ -19,10 +19,11 @@ const CardList: React.FC<CardListProps> = ({ cardData }) => {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 items-center h-auto mt-15">
+    <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-8 items-center h-auto mt-8 sm:mt-12 lg:mt-15">
       {cardData.map((card, index) => (
         <div
           key={index}
+          className="w-full sm:w-auto"
           onMouseEnter={() => setHoveredIndex(index)}
           onMouseLeave={() => setHoveredIndex(null)}
         >

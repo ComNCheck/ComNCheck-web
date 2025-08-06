@@ -82,13 +82,13 @@ export default function CalendarComponent({
   return (
     <div className="w-full flex flex-col items-center justify-center">
       {showOnlySelected && selectedEvents.length > 0 && (
-        <div className="mb-4 p-3 bg-blue-50 rounded-lg w-full max-w-md">
-          <div className="text-sm font-medium text-blue-800 mb-2">
+        <div className="mb-4 p-3 sm:p-4 bg-blue-50 rounded-lg w-full max-w-md">
+          <div className="text-xs sm:text-sm font-medium text-blue-800 mb-2">
             선택된 행사만 표시 중 ({selectedEvents.length}개)
           </div>
           <div className="space-y-1">
             {selectedEvents.map((event) => (
-              <div key={event.id} className="text-xs text-blue-700">
+              <div key={event.id} className="text-xs text-blue-700 truncate">
                 {event.eventName}
               </div>
             ))}
@@ -96,19 +96,21 @@ export default function CalendarComponent({
         </div>
       )}
 
-      <Calendar
-        mode="single"
-        selected={selectedDate}
-        onSelect={handleDateSelect}
-        month={new Date()}
-        modifiers={{
-          event: isEventDay,
-        }}
-        modifiersClassNames={{
-          event: "event-day",
-        }}
-        className="[&_.rdp]:text-lg [&_.rdp]:text-[#357ae1] [&_.rdp]:bg-[#e6f0ff]"
-      />
+      <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl">
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          onSelect={handleDateSelect}
+          month={new Date()}
+          modifiers={{
+            event: isEventDay,
+          }}
+          modifiersClassNames={{
+            event: "event-day",
+          }}
+          className="[&_.rdp]:text-sm sm:text-base lg:text-lg [&_.rdp]:text-[#357ae1] [&_.rdp]:bg-[#e6f0ff] [&_.rdp-button]:p-1 sm:[&_.rdp-button]:p-2 lg:[&_.rdp-button]:p-3"
+        />
+      </div>
     </div>
   );
 }

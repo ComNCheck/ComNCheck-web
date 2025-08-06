@@ -91,19 +91,21 @@ export function Calendar({
   };
 
   return (
-    <div className={`calendar w-sm ${className}`}>
-      <div className="flex justify-between items-center mb-3 gap-2 w-sm">
+    <div
+      className={`calendar w-full max-w-sm sm:max-w-md lg:max-w-lg ${className}`}
+    >
+      <div className="flex justify-between items-center mb-3 gap-2 w-full">
         <button
           onClick={() =>
             setCurrentMonth(
               new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
             )
           }
-          className="p-2 hover:bg-gray-100 rounded text-gray-600"
+          className="p-1 sm:p-2 hover:bg-gray-100 rounded text-gray-600"
         >
-          <IoIosArrowBack />
+          <IoIosArrowBack className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
-        <h2 className="text-xl font-semibold text-gray-900">
+        <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900">
           {currentMonth.getFullYear()}년 {monthNames[currentMonth.getMonth()]}
         </h2>
         <button
@@ -112,9 +114,9 @@ export function Calendar({
               new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
             )
           }
-          className="p-2 hover:bg-gray-100 rounded text-gray-600"
+          className="p-1 sm:p-2 hover:bg-gray-100 rounded text-gray-600"
         >
-          <IoIosArrowForward />
+          <IoIosArrowForward className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
 
@@ -122,7 +124,7 @@ export function Calendar({
         {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
           <div
             key={day}
-            className="p-1 text-center text-sm font-medium text-gray-500"
+            className="p-1 text-center text-xs sm:text-sm font-medium text-gray-500"
           >
             {day}
           </div>
@@ -134,7 +136,7 @@ export function Calendar({
               <button
                 onClick={() => handleDateClick(day)}
                 className={`
-                  w-10 h-10 rounded-full text-sm font-medium transition-colors
+                  w-8 h-8 sm:w-10 sm:h-10 rounded-full text-xs sm:text-sm font-medium transition-colors
                   ${isEventDay(day) ? "bg-[#DAEBFF]" : "bg-white"}
                   ${
                     isSelected(day)
@@ -149,7 +151,7 @@ export function Calendar({
                 {day.getDate()}
               </button>
             ) : (
-              <div className="w-10 h-10"></div>
+              <div className="w-8 h-8 sm:w-10 sm:h-10"></div>
             )}
           </div>
         ))}
