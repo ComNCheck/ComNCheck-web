@@ -81,21 +81,6 @@ export default function CalendarComponent({
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
-      {showOnlySelected && selectedEvents.length > 0 && (
-        <div className="mb-4 p-3 sm:p-4 bg-blue-50 rounded-lg w-full max-w-md">
-          <div className="text-xs sm:text-sm font-medium text-blue-800 mb-2">
-            선택된 행사만 표시 중 ({selectedEvents.length}개)
-          </div>
-          <div className="space-y-1">
-            {selectedEvents.map((event) => (
-              <div key={event.id} className="text-xs text-blue-700 truncate">
-                {event.eventName}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl">
         <Calendar
           mode="single"

@@ -12,11 +12,13 @@ import { useRouter } from "next/navigation";
 interface EventCheckProps {
   selectedDate?: Date;
   onSelectedEventsChange?: (events: majorEventItem[]) => void;
+  showOnlySelected?: boolean;
 }
 
 export default function EventCheck({
   selectedDate,
   onSelectedEventsChange,
+  showOnlySelected = false,
 }: EventCheckProps) {
   const router = useRouter();
   const [events, setEvents] = useState<majorEventItem[]>([]);
@@ -234,7 +236,7 @@ export default function EventCheck({
               )}
             </div>
 
-            {selectedEvents.length > 0 && (
+            {!showOnlySelected && selectedEvents.length > 0 && (
               <div className="mb-4 p-3 bg-blue-50 rounded-lg">
                 <div className="text-xs sm:text-sm font-medium text-blue-800 mb-2">
                   선택된 행사 ({selectedEvents.length}개)
@@ -276,6 +278,22 @@ export default function EventCheck({
           <span className="text-xs sm:text-sm">행사일정 추가하기</span>
         </button>
       </div>
+
+      {/* 선택된 행사만 표시 중 알림 */}
+      {showOnlySelected && selectedEvents.length > 0 && (
+        <div className="mt-4 p-3 sm:p-4 bg-blue-50 rounded-lg w-full max-w-md">
+          <div className="text-xs sm:text-sm font-medium text-blue-800 mb-2">
+            선택된 행사만 표시 중 ({selectedEvents.length}개)
+          </div>
+          <div className="space-y-1">
+            {selectedEvents.map((event) => (
+              <div key={event.id} className="text-xs text-blue-700 truncate">
+                {event.eventName}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 컨텍스트 메뉴 */}
       {contextMenuPosition && (

@@ -4,12 +4,14 @@ import { useState } from "react";
 import TitleAndDescription from "@/components/TitleAndDescription";
 import CalendarComponent from "./components/Calendar";
 import EventCheck from "./components/EventCheck";
+import Notification from "@/components/ui/notification";
 import { majorEventItem } from "@/mock/calendar/api";
 
 export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedEvents, setSelectedEvents] = useState<majorEventItem[]>([]);
   const [showOnlySelected, setShowOnlySelected] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   const handleSelectedEventsChange = (events: majorEventItem[]) => {
     setSelectedEvents(events);
@@ -18,6 +20,7 @@ export default function Calendar() {
   const handleFixButtonClick = () => {
     if (selectedEvents.length > 0) {
       setShowOnlySelected(true);
+      setShowNotification(true);
     }
   };
 
@@ -51,6 +54,7 @@ export default function Calendar() {
             <EventCheck
               selectedDate={selectedDate}
               onSelectedEventsChange={handleSelectedEventsChange}
+              showOnlySelected={showOnlySelected}
             />
           </div>
         </div>
@@ -59,14 +63,6 @@ export default function Calendar() {
         <div className="mt-6 sm:mt-8">
           {showOnlySelected ? (
             <div className="space-y-3">
-              <div className="p-4 sm:p-6 bg-green-50 border border-green-200 rounded-lg">
-                <div className="text-green-800 font-medium mb-2 text-sm sm:text-base">
-                  ✅ 행사 일정이 픽스되었습니다!
-                </div>
-                <div className="text-xs sm:text-sm text-green-700">
-                  선택된 {selectedEvents.length}개의 행사만 달력에 표시됩니다.
-                </div>
-              </div>
               <button
                 onClick={handleResetView}
                 className="w-full bg-gray-500 text-white py-3 sm:py-4 rounded-lg font-medium hover:bg-gray-600 transition-colors text-sm sm:text-base"
@@ -95,6 +91,17 @@ export default function Calendar() {
             </div>
           )}
         </div>
+
+        {/* 알림 컴포넌트 */}
+        {showNotification && (
+          <Notification
+            message="행사 일정이 픽스되었습니다!"
+            subMessage={`선택된 ${selectedEvents.length}개의 행사만 달력에 표시됩니다.`}
+            type="success"
+            duration={4000}
+            onClose={() => setShowNotification(false)}
+          />
+        )}
       </div>
     </div>
   );
