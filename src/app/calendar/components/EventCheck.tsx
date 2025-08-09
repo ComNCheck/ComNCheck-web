@@ -30,7 +30,10 @@ export default function EventCheck({
     x: number;
     y: number;
   } | null>(null);
+  const [hoveredEvent, setHoveredEvent] = useState<majorEventItem | null>(null);
+  const [showDropdown, setShowDropdown] = useState<majorEventItem | null>(null);
   const contextMenuRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // 데이터 불러오기
   useEffect(() => {
@@ -155,7 +158,40 @@ export default function EventCheck({
     );
   };
 
-  // 전역 클릭 이벤트로 컨텍스트 메뉴 닫기
+  // 점 세개 버튼 클릭 핸들러
+  const handleDotsClick = (e: React.MouseEvent, event: majorEventItem) => {
+    e.stopPropagation();
+    setShowDropdown(showDropdown?.id === event.id ? null : event);
+  };
+
+  // 드롭다운 메뉴 닫기
+  const closeDropdown = () => {
+    setShowDropdown(null);
+  };
+
+  // 이벤트 타입 결정 함수
+  const getEventType = (event: majorEventItem): "past" | "another" => {
+    // majorEvents 배열에서 온 것은 past, anotherEvents 배열에서 온 것은 another로 분류
+    const isMajorEvent = events.slice(0, 5).some((e) => e.id === event.id); // majorEvents는 id 1-5
+    return isMajorEvent ? "past" : "another";
+  };
+
+  // 수정하기 핸들러
+  const handleEdit = (event: majorEventItem) => {
+    const eventType = getEventType(event);
+    const editPath = `/calendar/addEvent/${eventType}-event/edit/${event.id}`;
+    router.push(editPath);
+    closeDropdown();
+  };
+
+  // 삭제하기 핸들러 (기존 handleDelete 로직 활용)
+  const handleDeleteFromDropdown = (event: majorEventItem) => {
+    setEvents((prev) => prev.filter((e) => e.id !== event.id));
+    setSelectedEvents((prev) => prev.filter((e) => e.id !== event.id));
+    closeDropdown();
+  };
+
+  // 전역 클릭 이벤트로 컨텍스트 메뉴와 드롭다운 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -163,6 +199,12 @@ export default function EventCheck({
         !contextMenuRef.current.contains(event.target as Node)
       ) {
         closeContextMenu();
+      }
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        closeDropdown();
       }
     };
 
@@ -191,7 +233,7 @@ export default function EventCheck({
                 filteredEvents.map((event, index) => (
                   <div
                     key={event.id}
-                    className={`p-3 rounded flex justify-between items-center cursor-pointer transition-all duration-200 ${
+                    className={`p-3 rounded flex justify-between items-center cursor-pointer transition-all duration-200 relative group ${
                       isEventSelected(event)
                         ? "bg-blue-100 border-2 border-blue-300 shadow-md"
                         : "bg-gray-50 hover:bg-gray-100"
@@ -201,6 +243,8 @@ export default function EventCheck({
                         : ""
                     }`}
                     onContextMenu={(e) => handleContextMenu(e, event)}
+                    onMouseEnter={() => setHoveredEvent(event)}
+                    onMouseLeave={() => setHoveredEvent(null)}
                     onClick={() => {
                       if (isEventSelected(event)) {
                         handleDeselect(event);
@@ -212,21 +256,87 @@ export default function EventCheck({
                     <div className="text-black flex-1 text-sm sm:text-base truncate">
                       {event.eventName}
                     </div>
-                    {isEventSelected(event) && (
-                      <div className="ml-2 text-blue-600 flex-shrink-0">
-                        <svg
-                          className="w-4 h-4 sm:w-5 sm:h-5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                    )}
+
+                    <div className="flex items-center space-x-2">
+                      {isEventSelected(event) && (
+                        <div className="text-blue-600 flex-shrink-0">
+                          <svg
+                            className="w-4 h-4 sm:w-5 sm:h-5"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                      )}
+
+                      {/* 점 세개 버튼 - hover 시에만 표시 */}
+                      {hoveredEvent?.id === event.id && (
+                        <div className="relative">
+                          <button
+                            onClick={(e) => handleDotsClick(e, event)}
+                            className="p-1 rounded hover:bg-gray-200 transition-colors duration-200 flex-shrink-0"
+                          >
+                            <svg
+                              className="w-4 h-4 text-gray-600"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                            </svg>
+                          </button>
+
+                          {/* 드롭다운 메뉴 */}
+                          {showDropdown?.id === event.id && (
+                            <div
+                              ref={dropdownRef}
+                              className="absolute right-0 top-8 z-50 bg-white border border-gray-200 rounded-lg shadow-lg py-1 min-w-[120px] sm:min-w-[140px]"
+                            >
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEdit(event);
+                                }}
+                                className="w-full px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-blue-50 text-blue-600 flex items-center"
+                              >
+                                <svg
+                                  className="w-3 h-3 sm:w-4 sm:h-4 mr-2"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                </svg>
+                                수정하기
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteFromDropdown(event);
+                                }}
+                                className="w-full px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-red-50 text-red-600 flex items-center"
+                              >
+                                <svg
+                                  className="w-3 h-3 sm:w-4 sm:h-4 mr-2"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                삭제하기
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))
               ) : (
@@ -306,7 +416,10 @@ export default function EventCheck({
           }}
         >
           <button
-            onClick={handleSelect}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSelect();
+            }}
             className="w-full px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-blue-50 text-blue-600 flex items-center"
           >
             <svg
@@ -323,7 +436,10 @@ export default function EventCheck({
             선택하기
           </button>
           <button
-            onClick={handleDelete}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete();
+            }}
             className="w-full px-3 sm:px-4 py-2 text-left text-xs sm:text-sm hover:bg-red-50 text-red-600 flex items-center"
           >
             <svg
