@@ -68,7 +68,7 @@ const PopularEvent = () => {
       <div className="w-full h-full max-w-5xl mx-auto px-8">
         <TitleAndDescription
           title="학생들은 이런 행사를 원해요"
-          description="학생들의 목소리가 모이는 공간이에요. 앱을 통해 원하는 행사를 적극적으로 참신과 함께 이곳에 표시돼요."
+          description="학생들의 목소리가 모이는 공간이에요. 앱을 통해 원하는 행사를 작성하면 랭킹과 함께 이곳에 표시돼요."
         />
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
