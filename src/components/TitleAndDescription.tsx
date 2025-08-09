@@ -25,12 +25,13 @@ const TitleAndDescription: React.FC<TitleAndDescriptionProps> = ({
       ))}
       <p className="text-base sm:text-lg md:text-xl font-medium">
         {description
-          .split(".")
+          .split(". ")
           .filter((sentence) => sentence.trim())
           .map((sentence, index, arr) => (
-            <span key={index} className="block md:inline">
+            <span key={index} className="block">
               {sentence.trim()}
-              {index < arr.length - 1 ? "." : ""}
+              {sentence.trim().endsWith(".") ? "" : "."}
+              <br />
             </span>
           ))}
       </p>
