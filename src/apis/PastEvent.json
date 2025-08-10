@@ -7,6 +7,12 @@
   },
   {
     "title": "MT 준비",
+    "description": "mt 준비 팁",
+    "month": "1월",
+    "sort": "할일별"
+  },
+  {
+    "title": "MT 준비",
     "description": "2025년 3월 26일 (목)",
     "event": "MT",
     "sort": "행사별"

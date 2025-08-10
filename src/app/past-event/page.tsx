@@ -33,6 +33,10 @@ export default function PastEvent() {
   const [currentSelectedCategory, setCurrentSelectedCategory] =
     useState<string>("전체");
 
+  const [selectedEvent, setSelectedEvent] = useState<PastEventItem | null>(
+    null
+  );
+
   // URL 쿼리스트링 준비되면 상태 동기화 후 렌더링 시작
   useEffect(() => {
     const urlSort = searchParams.get("sort");
@@ -125,6 +129,7 @@ export default function PastEvent() {
                       key={index}
                       title={event.title}
                       description={event.description}
+                      onClick={() => setSelectedEvent(event)}
                     />
                   ))
                 ) : (
@@ -135,13 +140,17 @@ export default function PastEvent() {
               </div>
             </div>
             <div className="md:w-[35%] h-full">
-              <Checklist
-                title="강의실 대관"
-                content="강의실 대관은 어디에서 진행하면 되고, ~"
-                tip={`1. 공연 준비는 집부들이 모이는게 어렵기 때문에 1월초부터 미리미리 준비(간단한 연극식, 마술, 기타 등등)
-                2.학생회관(학생지원팀) 지하 무용실, 학생회관(동아립연합회장) B05호실 사용
-                (여담) 학생회관 B05 비밀번호 1241 한번 해서 되면, 몰래 연습가능`}
-              />
+              {selectedEvent ? (
+                <Checklist
+                  title={selectedEvent.title}
+                  content={selectedEvent.description}
+                  tip={`여기에 ${selectedEvent.title} 팁`}
+                />
+              ) : (
+                <p className="text-gray-400 text-sm text-center">
+                  행사를 선택하면 상세 체크리스트가 보여요.
+                </p>
+              )}
             </div>
           </>
         )}
