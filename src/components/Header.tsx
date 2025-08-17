@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 export default function Header() {
   const router = useRouter();
+  
   const handleLogin = () => {
     console.log("Google 로그인 시도 중...");
     const baseURL = process.env.NEXT_PUBLIC_API_URL;
