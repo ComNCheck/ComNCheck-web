@@ -23,3 +23,14 @@ export const getMonthlyChecklist = async (params?: {startMonth: string; endMonth
     throw error;
   }
 };
+
+export const putChecklistCompleted = async(itemId: number,  isChecked: boolean):Promise<void>=>{
+  //체크리스트 상태 업데이트
+  try{
+    const response = await instance.put(`/api/v1/major-event/checklists/${itemId}`,{isChecked});
+    console.log("체크리스트 완료 상태 업데이트 성공", response);
+  }catch(error) {
+    console.error("체크리스트 완료 상태 업데이트 실패", error);
+    throw error;
+  }
+}

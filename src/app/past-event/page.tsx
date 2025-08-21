@@ -8,7 +8,7 @@ import MonthSelector from "./components/MonthSelector";
 import PastEventCard from "./components/PastEventCard";
 import Checklist from "./components/Checklist";
 import Category from "@/components/Category";
-import { getMajorEventChecklist, getMonthlyChecklist } from "@/apis/event";
+import { getMajorEventChecklist, getMonthlyChecklist, putChecklistCompleted } from "@/apis/event";
 import { CategoryProps, ChecklistGroup, CheckListType } from "@/apis/event.type";
 
 interface PastEventItem {
@@ -117,6 +117,40 @@ export default function PastEvent() {
     }
   }, [currentSort, currentSelectedMonths, currentSelectedCategory]);
 
+   const handleToggleChecklist = async (itemId: number, isChecked: boolean) => {
+  const prevMonthlyChecklists = monthlyChecklists;
+
+  // UI 먼저 업데이트
+  setMonthlyChecklists(prevChecklists =>
+    prevChecklists.map(event => ({
+      ...event,
+      checklists: event.checklists.map(item =>
+        item.id === itemId ? { ...item, isChecked } : item
+      )
+    }))
+  );
+
+  // 선택된 이벤트도 업데이트
+  if (selectedMonthlyEvent) {
+    setSelectedMonthlyEvent(prev => prev && {
+      ...prev,
+      checklists: prev.checklists.map(item =>
+        item.id === itemId ? { ...item, isChecked } : item
+      )
+    });
+  }
+
+  try {
+    await putChecklistCompleted(itemId, isChecked);
+    console.log("체크리스트 상태 업데이트 성공", isChecked);
+  } catch (error) {
+    console.error("체크리스트 상태 업데이트 실패", error);
+    // 실패하면 이전 상태로 롤백
+    setMonthlyChecklists(prevMonthlyChecklists);
+    if (selectedMonthlyEvent) setSelectedMonthlyEvent(selectedMonthlyEvent);
+  }
+};
+
   const categoryList = {
     할일별: [],
     연도별: [
@@ -181,7 +215,7 @@ export default function PastEvent() {
                   title={selectedMonthlyEvent.title}
                   checklists={selectedMonthlyEvent.checklists}
                   tips={selectedMonthlyEvent.tips}
-                />
+                  onToggleChecklist={handleToggleChecklist}                />
               ) : (
                 <p className="text-gray-400 text-sm text-center">
                   행사를 선택하면 상세 체크리스트가 보여요.

@@ -6,9 +6,9 @@ interface ChecklistItemProps {
   title: string;
   checklists: ChecklistItem[];
   tips: Tip[];
+  onToggleChecklist: (itemId: number, isChecked: boolean) => void;
 }
-
-const Checklist: React.FC<ChecklistItemProps> = ({ title, checklists, tips }) => {
+const Checklist: React.FC<ChecklistItemProps> = ({ title, checklists, tips ,onToggleChecklist}) => {
   const [isChecked, setIsChecked] = useState(false);
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -29,9 +29,7 @@ const Checklist: React.FC<ChecklistItemProps> = ({ title, checklists, tips }) =>
             <input
               type="checkbox"
               checked={checklistItem.isChecked}
-              onChange={handleCheckboxChange}
-              className="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
-            />
+              onChange={(e) => onToggleChecklist(checklistItem.id,  !checklistItem.isChecked)}            />
             <div className="text-sm font-bold text-black">{title}</div>
           </div>
           <div className="text-xs text-[#656565]">{checklistItem.content}</div>
