@@ -1,4 +1,4 @@
-import { CategoryProps, CheckListType } from "./event.type";
+import { CategoryProps, CheckListType, MonthlyChecklistType } from "./event.type";
 import instance from "./instance";
 
 export const getMajorEventChecklist = async (params?: { year?: number; category?: CategoryProps }): Promise<CheckListType[]> => {
@@ -9,6 +9,17 @@ export const getMajorEventChecklist = async (params?: { year?: number; category?
     return response.data;
   } catch (error) {
     console.error("과행사 목록 체크리스트 api 요청 실패", error);
+    throw error;
+  }
+};
+export const getMonthlyChecklist = async (params?: {startMonth: string; endMonth: string}): Promise<MonthlyChecklistType[]> => {
+  //과행사 목록 동적 조회(할일별)
+  try {
+    const response = await instance.get<MonthlyChecklistType[]>("/api/v1/major-event/checklists/monthly",{ params });
+    console.log("월별 할일 체크리스트 api 요청 성공", response);
+    return response.data;
+  } catch (error) {
+    console.error("월별 할일 체크리스트 api 요청 실패", error);
     throw error;
   }
 };
