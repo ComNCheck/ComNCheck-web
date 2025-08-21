@@ -6,9 +6,10 @@ import TitleAndDescription from "@/components/TitleAndDescription";
 import Dropdown from "./components/Dropdown";
 import MonthSelector from "./components/MonthSelector";
 import PastEventCard from "./components/PastEventCard";
-import pastEventData from "@/apis/PastEvent.json";
 import Checklist from "./components/Checklist";
 import Category from "@/components/Category";
+import { getMajorEventChecklist, getMonthlyChecklist, putChecklistCompleted } from "@/apis/event";
+import { CategoryProps, ChecklistGroup, CheckListType } from "@/apis/event.type";
 
 interface PastEventItem {
   title: string;
@@ -19,6 +20,19 @@ interface PastEventItem {
   sort: string;
 }
 
+const categoryMapping: Record<string, CategoryProps | '전체'> = {
+  "전체": "ALL",
+  "새내기 배움터": "FRESHMAN_ORIENTATION",
+  "개강/종강총회": "MEETING",
+  "대면식": "FACE_TO_FACE_MEETING",
+  "간식행사": "SNACK_EVENT",
+  "MT": "MT",
+  "해오름식": "KICK_OFF",
+  "체전": "SPORTS_DAY",
+  "축제": "FESTIVAL",
+  "홈커밍 데이": "HOME_COMING_DAY",
+};
+
 export default function PastEvent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -27,17 +41,22 @@ export default function PastEvent() {
 
   const [isReady, setIsReady] = useState(false);
   const [currentSort, setCurrentSort] = useState<string>(initialSort);
-  const [currentSelectedMonths, setCurrentSelectedMonths] = useState<number[]>(
-    []
-  );
-  const [currentSelectedCategory, setCurrentSelectedCategory] =
-    useState<string>("전체");
+  const [currentSelectedMonths, setCurrentSelectedMonths] = useState<number[]>([]);
+  const [currentSelectedCategory, setCurrentSelectedCategory] = useState<string>("전체");
+
+  // ✅ 선택된 이벤트 데이터를 타입별로 분리하여 관리
+  const [selectedMonthlyEvent, setSelectedMonthlyEvent] = useState<ChecklistGroup | null>(null);
+  const [selectedMajorEvent, setSelectedMajorEvent] = useState<CheckListType | null>(null);
+
+  // '할일별' 탭용 데이터
+  const [monthlyChecklists, setMonthlyChecklists] = useState<ChecklistGroup[]>([]);
+  // '연도별' 및 '행사별' 탭용 데이터
+  const [events, setEvents] = useState<CheckListType[]>([]);
 
   const [selectedEvent, setSelectedEvent] = useState<PastEventItem | null>(
     null
   );
 
-  // URL 쿼리스트링 준비되면 상태 동기화 후 렌더링 시작
   useEffect(() => {
     const urlSort = searchParams.get("sort");
     if (urlSort) {
@@ -50,6 +69,8 @@ export default function PastEvent() {
     setCurrentSort(sort);
     setCurrentSelectedMonths([]);
     setCurrentSelectedCategory("전체");
+    setSelectedMonthlyEvent(null);
+    setSelectedMajorEvent(null);
 
     const query = new URLSearchParams(window.location.search);
     query.set("sort", sort);
@@ -58,27 +79,85 @@ export default function PastEvent() {
 
   const handleMonthSelect = (months: number[]) => {
     setCurrentSelectedMonths(months);
+    setSelectedMonthlyEvent(null);
   };
 
+  type CategoryKey = keyof typeof categoryMapping;
   const handleCategorySelect = (category: string) => {
-    setCurrentSelectedCategory(category);
+    if (currentSort === "연도별") {
+      setCurrentSelectedCategory(category); 
+    } else {
+      const mappedCategory = categoryMapping[category as CategoryKey];
+      setCurrentSelectedCategory(mappedCategory);
+    }
+    setSelectedMajorEvent(null);
   };
 
-  const filteredEvents: PastEventItem[] = pastEventData.filter((event) => {
+  useEffect(() => {
+    setMonthlyChecklists([]);
+    setEvents([]);
+    setSelectedMonthlyEvent(null);
+    setSelectedMajorEvent(null);
+
     if (currentSort === "할일별") {
-      const eventMonthNumber = parseInt(event.month?.replace("월", "") || "0");
-      return currentSelectedMonths.includes(eventMonthNumber);
-    } else if (currentSort === "행사별") {
-      if (!event.event) return false;
-      if (currentSelectedCategory === "전체") return true;
-      return event.event === currentSelectedCategory;
+      if (currentSelectedMonths.length > 0) {
+        const startMonth = Math.min(...currentSelectedMonths);
+        const endMonth = Math.max(...currentSelectedMonths);
+          getMonthlyChecklist({ startMonth: startMonth.toString(), endMonth: endMonth.toString() })
+        .then((data) => {
+          // ✅ API 응답 'data'가 객체이므로, 그 안의 'checklists' 배열에 바로 접근
+          setMonthlyChecklists(data.checklists);
+        })
+        .catch(console.error);
+      } else {
+        setMonthlyChecklists([]);
+      }
     } else if (currentSort === "연도별") {
-      if (!event.year) return false;
-      if (currentSelectedCategory === "전체") return true;
-      return event.year === currentSelectedCategory;
+      const params = currentSelectedCategory !== "전체" ? { year: parseInt(currentSelectedCategory) } : {};
+      getMajorEventChecklist(params)
+        .then((data) => setEvents(data))
+        .catch(console.error);
+    } else if (currentSort === "행사별") {
+      const params = currentSelectedCategory !== "ALL" ? { category: currentSelectedCategory } : {};
+      getMajorEventChecklist(params)
+      .then((data) => setEvents(data))
+      .catch(console.error);
     }
-    return false;
-  });
+  }, [currentSort, currentSelectedMonths, currentSelectedCategory]);
+
+  const handleToggleChecklist = async (itemId: number, isChecked: boolean) => {
+    const prevMonthlyChecklists = monthlyChecklists;
+
+    // UI 먼저 업데이트
+    setMonthlyChecklists(prevChecklists =>
+      prevChecklists.map(event => ({
+        ...event,
+        checklists: event.checklists.map(item =>
+          item.id === itemId ? { ...item, isChecked } : item
+        )
+      }))
+    );
+
+    // 선택된 이벤트도 업데이트
+    if (selectedMonthlyEvent) {
+      setSelectedMonthlyEvent(prev => prev && {
+        ...prev,
+        checklists: prev.checklists.map(item =>
+          item.id === itemId ? { ...item, isChecked } : item
+        )
+      });
+    }
+
+    try {
+      await putChecklistCompleted(itemId, isChecked);
+      console.log("체크리스트 상태 업데이트 성공", isChecked);
+    } catch (error) {
+      console.error("체크리스트 상태 업데이트 실패", error);
+      // 실패하면 이전 상태로 롤백
+      setMonthlyChecklists(prevMonthlyChecklists);
+      if (selectedMonthlyEvent) setSelectedMonthlyEvent(selectedMonthlyEvent);
+    }
+  };
 
   const categoryList = {
     할일별: [],
@@ -103,7 +182,7 @@ export default function PastEvent() {
     ],
   };
 
-  if (!isReady) return null; // searchParams 준비될 때까지 렌더링 지연
+  if (!isReady) return null;
 
   return (
     <div className="min-h-screen text-black bg-white flex flex-col items-left justify-left py-12">
@@ -112,8 +191,7 @@ export default function PastEvent() {
           title="이제까지 이런 행사들을 진행했어요!"
           description="예전 기수 학생회 분들이 했었던 행사들을 확인할 수 있어요."
         />
-        <Dropdown onSelect={handleSortChange} selectedSort={currentSort} />{" "}
-        {/* 선택된 Sort 넘겨줌 */}
+        <Dropdown onSelect={handleSortChange} selectedSort={currentSort} />
       </div>
       <div className="w-full h-0.5 bg-black my-4"></div>
 
@@ -123,13 +201,13 @@ export default function PastEvent() {
             <div className="flex flex-col w-full md:w-[50%] gap-4 ">
               <MonthSelector onMonthSelect={handleMonthSelect} />
               <div className="min-h-[300px] gap-4">
-                {filteredEvents.length > 0 ? (
-                  filteredEvents.map((event, index) => (
+                {monthlyChecklists.length > 0 ? (
+                  monthlyChecklists.map((event) => (
                     <PastEventCard
-                      key={index}
+                      key={event.id}
                       title={event.title}
-                      description={event.description}
-                      onClick={() => setSelectedEvent(event)}
+                      description={event.checklists[0]?.content || '내용 없음'}
+                      onClick={() => setSelectedMonthlyEvent(event)}
                     />
                   ))
                 ) : (
@@ -140,11 +218,12 @@ export default function PastEvent() {
               </div>
             </div>
             <div className="md:w-[35%] h-full">
-              {selectedEvent ? (
+              {selectedMonthlyEvent ? (
                 <Checklist
-                  title={selectedEvent.title}
-                  content={selectedEvent.description}
-                  tip={`여기에 ${selectedEvent.title} 팁`}
+                  title={selectedMonthlyEvent.title}
+                  checklists={selectedMonthlyEvent.checklists}
+                  tips={selectedMonthlyEvent.tips}
+                  onToggleChecklist={handleToggleChecklist}
                 />
               ) : (
                 <p className="text-gray-400 text-sm text-center">
@@ -162,12 +241,16 @@ export default function PastEvent() {
               onSelect={handleCategorySelect}
             />
             <div className="min-h-[300px] gap-4">
-              {filteredEvents.length > 0 ? (
-                filteredEvents.map((event, index) => (
+              {events.length > 0 ? (
+                events.map((event) => (
                   <PastEventCard
-                    key={index}
-                    title={event.title}
-                    description={event.description}
+                    key={event.majorEventId}
+                    title={event.eventName}
+                    description={event.notice}
+                    date={event.date}
+                    location={event.location}
+                    cardNewsImageUrls={event.cardNewsImageUrls}
+                    onClick={() => setSelectedMajorEvent(event)}
                   />
                 ))
               ) : (
