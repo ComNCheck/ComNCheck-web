@@ -53,6 +53,10 @@ export default function PastEvent() {
   // '연도별' 및 '행사별' 탭용 데이터
   const [events, setEvents] = useState<CheckListType[]>([]);
 
+  const [selectedEvent, setSelectedEvent] = useState<PastEventItem | null>(
+    null
+  );
+
   useEffect(() => {
     const urlSort = searchParams.get("sort");
     if (urlSort) {
