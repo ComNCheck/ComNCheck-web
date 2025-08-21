@@ -20,7 +20,7 @@ interface PastEventItem {
   sort: string;
 }
 
-const categoryMapping: Record<string, CategoryProps | 'ALL'> = {
+const categoryMapping: Record<string, CategoryProps | '전체'> = {
   "전체": "ALL",
   "새내기 배움터": "FRESHMAN_ORIENTATION",
   "개강/종강총회": "MEETING",
@@ -42,7 +42,7 @@ export default function PastEvent() {
   const [isReady, setIsReady] = useState(false);
   const [currentSort, setCurrentSort] = useState<string>(initialSort);
   const [currentSelectedMonths, setCurrentSelectedMonths] = useState<number[]>([]);
-  const [currentSelectedCategory, setCurrentSelectedCategory] = useState<CategoryProps | 'ALL'>("ALL");
+  const [currentSelectedCategory, setCurrentSelectedCategory] = useState<string>("전체");
 
   // ✅ 선택된 이벤트 데이터를 타입별로 분리하여 관리
   const [selectedMonthlyEvent, setSelectedMonthlyEvent] = useState<ChecklistGroup | null>(null);
@@ -64,7 +64,7 @@ export default function PastEvent() {
   const handleSortChange = (sort: string) => {
     setCurrentSort(sort);
     setCurrentSelectedMonths([]);
-    setCurrentSelectedCategory("ALL");
+    setCurrentSelectedCategory("전체");
     setSelectedMonthlyEvent(null);
     setSelectedMajorEvent(null);
 
@@ -79,9 +79,13 @@ export default function PastEvent() {
   };
 
   type CategoryKey = keyof typeof categoryMapping;
-  const handleCategorySelect = (category: CategoryKey) => {
-    const mappedCategory = categoryMapping[category];
-    setCurrentSelectedCategory(mappedCategory);
+  const handleCategorySelect = (category: string) => {
+    if (currentSort === "연도별") {
+      setCurrentSelectedCategory(category); 
+    } else {
+      const mappedCategory = categoryMapping[category as CategoryKey];
+      setCurrentSelectedCategory(mappedCategory);
+    }
     setSelectedMajorEvent(null);
   };
 
@@ -101,55 +105,55 @@ export default function PastEvent() {
           setMonthlyChecklists(data.checklists);
         })
         .catch(console.error);
-    } else {
-      setMonthlyChecklists([]);
-    }
+      } else {
+        setMonthlyChecklists([]);
+      }
     } else if (currentSort === "연도별") {
-      const params = currentSelectedCategory !== "ALL" ? { year: parseInt(currentSelectedCategory) } : {};
+      const params = currentSelectedCategory !== "전체" ? { year: parseInt(currentSelectedCategory) } : {};
       getMajorEventChecklist(params)
         .then((data) => setEvents(data))
         .catch(console.error);
     } else if (currentSort === "행사별") {
       const params = currentSelectedCategory !== "ALL" ? { category: currentSelectedCategory } : {};
       getMajorEventChecklist(params)
-        .then((data) => setEvents(data))
-        .catch(console.error);
+      .then((data) => setEvents(data))
+      .catch(console.error);
     }
   }, [currentSort, currentSelectedMonths, currentSelectedCategory]);
 
-   const handleToggleChecklist = async (itemId: number, isChecked: boolean) => {
-  const prevMonthlyChecklists = monthlyChecklists;
+  const handleToggleChecklist = async (itemId: number, isChecked: boolean) => {
+    const prevMonthlyChecklists = monthlyChecklists;
 
-  // UI 먼저 업데이트
-  setMonthlyChecklists(prevChecklists =>
-    prevChecklists.map(event => ({
-      ...event,
-      checklists: event.checklists.map(item =>
-        item.id === itemId ? { ...item, isChecked } : item
-      )
-    }))
-  );
+    // UI 먼저 업데이트
+    setMonthlyChecklists(prevChecklists =>
+      prevChecklists.map(event => ({
+        ...event,
+        checklists: event.checklists.map(item =>
+          item.id === itemId ? { ...item, isChecked } : item
+        )
+      }))
+    );
 
-  // 선택된 이벤트도 업데이트
-  if (selectedMonthlyEvent) {
-    setSelectedMonthlyEvent(prev => prev && {
-      ...prev,
-      checklists: prev.checklists.map(item =>
-        item.id === itemId ? { ...item, isChecked } : item
-      )
-    });
-  }
+    // 선택된 이벤트도 업데이트
+    if (selectedMonthlyEvent) {
+      setSelectedMonthlyEvent(prev => prev && {
+        ...prev,
+        checklists: prev.checklists.map(item =>
+          item.id === itemId ? { ...item, isChecked } : item
+        )
+      });
+    }
 
-  try {
-    await putChecklistCompleted(itemId, isChecked);
-    console.log("체크리스트 상태 업데이트 성공", isChecked);
-  } catch (error) {
-    console.error("체크리스트 상태 업데이트 실패", error);
-    // 실패하면 이전 상태로 롤백
-    setMonthlyChecklists(prevMonthlyChecklists);
-    if (selectedMonthlyEvent) setSelectedMonthlyEvent(selectedMonthlyEvent);
-  }
-};
+    try {
+      await putChecklistCompleted(itemId, isChecked);
+      console.log("체크리스트 상태 업데이트 성공", isChecked);
+    } catch (error) {
+      console.error("체크리스트 상태 업데이트 실패", error);
+      // 실패하면 이전 상태로 롤백
+      setMonthlyChecklists(prevMonthlyChecklists);
+      if (selectedMonthlyEvent) setSelectedMonthlyEvent(selectedMonthlyEvent);
+    }
+  };
 
   const categoryList = {
     할일별: [],
