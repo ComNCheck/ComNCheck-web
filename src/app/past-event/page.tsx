@@ -9,6 +9,8 @@ import PastEventCard from "./components/PastEventCard";
 import pastEventData from "@/apis/PastEvent.json";
 import Checklist from "./components/Checklist";
 import Category from "@/components/Category";
+import { getMajorEventChecklist } from "@/apis/event";
+import { CategoryProps, CheckListType } from "@/apis/event.type";
 
 interface PastEventItem {
   title: string;
@@ -18,6 +20,19 @@ interface PastEventItem {
   year?: string;
   sort: string;
 }
+
+const categoryMapping: Record<string, CategoryProps | '전체'>={
+  "전체": "ALL",
+  "새내기 배움터": "FRESHMAN_ORIENTATION",
+  "개강/종강총회": "MEETING",
+  "대면식": "FACE_TO_FACE_MEETING",
+  "간식행사": "SNACK_EVENT",
+  "MT": "MT",
+  "해오름식": "KICK_OFF",
+  "체전": "SPORTS_DAY",
+  "축제": "FESTIVAL",
+  "홈커밍 데이": "HOME_COMING_DAY",
+};
 
 export default function PastEvent() {
   const router = useRouter();
@@ -30,14 +45,14 @@ export default function PastEvent() {
   const [currentSelectedMonths, setCurrentSelectedMonths] = useState<number[]>(
     []
   );
-  const [currentSelectedCategory, setCurrentSelectedCategory] =
-    useState<string>("전체");
+  const [currentSelectedCategory, setCurrentSelectedCategory] = useState<CategoryProps | '전체'>("전체");
 
   const [selectedEvent, setSelectedEvent] = useState<PastEventItem | null>(
     null
   );
 
-  // URL 쿼리스트링 준비되면 상태 동기화 후 렌더링 시작
+  const [events, setEvents] = useState<CheckListType[]>([]);
+
   useEffect(() => {
     const urlSort = searchParams.get("sort");
     if (urlSort) {
@@ -60,22 +75,33 @@ export default function PastEvent() {
     setCurrentSelectedMonths(months);
   };
 
-  const handleCategorySelect = (category: string) => {
-    setCurrentSelectedCategory(category);
+  type CategoryKey = keyof typeof categoryMapping;
+  const handleCategorySelect = (category: CategoryKey) => {
+    const mappedCategory = categoryMapping[category] || category; // 매핑된 값이 없으면 그대로 사용
+    setCurrentSelectedCategory(mappedCategory);
   };
+
+  useEffect(() => {
+    if (currentSort === "연도별" && currentSelectedCategory !== "전체") {
+      getMajorEventChecklist({ year: parseInt(currentSelectedCategory) })
+        .then((data) => setEvents(data))
+        .catch(console.error);
+    } else if (currentSort === "행사별" && currentSelectedCategory !== "전체") {
+      getMajorEventChecklist({ category: currentSelectedCategory })
+        .then((data) => setEvents(data))
+        .catch(console.error);
+    } else if (currentSort !== "할일별" && currentSelectedCategory === "전체") {
+      getMajorEventChecklist({})
+        .then((data) => setEvents(data))
+        .catch(console.error);
+    }
+  }, [currentSort, currentSelectedCategory]);
+
 
   const filteredEvents: PastEventItem[] = pastEventData.filter((event) => {
     if (currentSort === "할일별") {
       const eventMonthNumber = parseInt(event.month?.replace("월", "") || "0");
       return currentSelectedMonths.includes(eventMonthNumber);
-    } else if (currentSort === "행사별") {
-      if (!event.event) return false;
-      if (currentSelectedCategory === "전체") return true;
-      return event.event === currentSelectedCategory;
-    } else if (currentSort === "연도별") {
-      if (!event.year) return false;
-      if (currentSelectedCategory === "전체") return true;
-      return event.year === currentSelectedCategory;
     }
     return false;
   });
@@ -103,7 +129,7 @@ export default function PastEvent() {
     ],
   };
 
-  if (!isReady) return null; // searchParams 준비될 때까지 렌더링 지연
+  if (!isReady) return null;
 
   return (
     <div className="min-h-screen text-black bg-white flex flex-col items-left justify-left py-12">
@@ -112,8 +138,7 @@ export default function PastEvent() {
           title="이제까지 이런 행사들을 진행했어요!"
           description="예전 기수 학생회 분들이 했었던 행사들을 확인할 수 있어요."
         />
-        <Dropdown onSelect={handleSortChange} selectedSort={currentSort} />{" "}
-        {/* 선택된 Sort 넘겨줌 */}
+        <Dropdown onSelect={handleSortChange} selectedSort={currentSort} />
       </div>
       <div className="w-full h-0.5 bg-black my-4"></div>
 
@@ -162,12 +187,12 @@ export default function PastEvent() {
               onSelect={handleCategorySelect}
             />
             <div className="min-h-[300px] gap-4">
-              {filteredEvents.length > 0 ? (
-                filteredEvents.map((event, index) => (
+              {events.length > 0 ? (
+                events.map((event) => (
                   <PastEventCard
-                    key={index}
-                    title={event.title}
-                    description={event.description}
+                    key={event.majorEventId}
+                    title={event.eventName}
+                    description={event.notice}
                   />
                 ))
               ) : (
