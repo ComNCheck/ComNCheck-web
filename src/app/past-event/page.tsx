@@ -219,7 +219,8 @@ export default function PastEvent() {
                   title={selectedMonthlyEvent.title}
                   checklists={selectedMonthlyEvent.checklists}
                   tips={selectedMonthlyEvent.tips}
-                  onToggleChecklist={handleToggleChecklist}                />
+                  onToggleChecklist={handleToggleChecklist}
+                />
               ) : (
                 <p className="text-gray-400 text-sm text-center">
                   행사를 선택하면 상세 체크리스트가 보여요.
@@ -242,6 +243,9 @@ export default function PastEvent() {
                     key={event.majorEventId}
                     title={event.eventName}
                     description={event.notice}
+                    date={event.date}
+                    location={event.location}
+                    cardNewsImageUrls={event.cardNewsImageUrls}
                     onClick={() => setSelectedMajorEvent(event)}
                   />
                 ))
