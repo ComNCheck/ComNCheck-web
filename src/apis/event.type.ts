@@ -44,3 +44,7 @@ export interface MonthlyChecklistType { // 할일별
   endMonth: number;
   checklists: ChecklistGroup[]; 
 }
+
+export interface LeftEventCount{
+  count: number; // 남은 과행사 개수
+}
