@@ -1,4 +1,4 @@
-import { CategoryProps, CheckListType, MonthlyChecklistType } from "./event.type";
+import { CategoryProps, CheckListType, LeftEventCount, MonthlyChecklistType } from "./event.type";
 import instance from "./instance";
 
 export const getMajorEventChecklist = async (params?: { year?: number; category?: string }): Promise<CheckListType[]> => {
@@ -31,6 +31,18 @@ export const putChecklistCompleted = async(itemId: number,  isChecked: boolean):
     console.log("체크리스트 완료 상태 업데이트 성공", response);
   }catch(error) {
     console.error("체크리스트 완료 상태 업데이트 실패", error);
+    throw error;
+  }
+}
+
+export const getCountLeftEvent = async(): Promise<LeftEventCount>=>{
+  //남은 과행사 개수 조회
+  try{
+    const response = await instance.get<LeftEventCount>("/api/v1/major-event/count");
+    console.log("남은 과행사 개수 조회 성공", response);
+    return response.data;
+  }catch(error){
+    console.error("남은 과행사 개수 조회 실패", error);
     throw error;
   }
 }
