@@ -1,6 +1,3 @@
-import logo from "../../../public/images/logo.png";
-import textlogo from "../../../public/images/textlogo.png";
-import namelist from "../../../public/images/name_ld.png";
 import Image from "next/image";
 export default function Landing() {
   return (
@@ -23,7 +20,7 @@ export default function Landing() {
             서비스 시작하기 →
           </button>
           <div className="flex flex-row items-center gap-2">
-            <Image src={namelist} alt="이름" width={160} height={36} />
+            <Image src="/images/name_ld.png" alt="이름" width={160} height={36} />
             <span className="text-[#64758b] font-semibold text-sm">
               +100 명이 이미 사용하고 있어요
             </span>
@@ -38,14 +35,14 @@ export default function Landing() {
           </div>
           <div>
             <Image
-              src={textlogo}
+              src="/images/textlogo.png"
               alt="컴첵로고"
               width={150}
               height={36}
               className="mx-auto"
             />
             <Image
-              src={logo}
+              src="/images/logo.png"
               alt="로고"
               width={200}
               height={200}

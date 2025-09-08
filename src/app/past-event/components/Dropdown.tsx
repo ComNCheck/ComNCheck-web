@@ -9,7 +9,7 @@ import {
 
 type OptionType = {
   label: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
 };
 const options: OptionType[] = [
   { label: "할일별", icon: <BiCalendarStar className="w-6 h-6" /> },

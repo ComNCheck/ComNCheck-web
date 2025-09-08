@@ -1,6 +1,5 @@
 "use client";
 import { BiUserCircle } from "react-icons/bi";
-import logo from "../../public/images/logo.png"
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,7 +17,7 @@ export default function Header() {
       <div className="mx-auto flex h-16 w-full items-center justify-between px-4 md:px-8 lg:w-[70%] ">
         <Link href="/" className="relative h-12 w-28 shrink-0">
           <Image
-            src={logo}
+            src="/images/logo.png"
             alt="로고"
             fill
             priority
