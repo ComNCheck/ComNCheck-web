@@ -105,10 +105,8 @@ export default function PastEvent() {
         const endMonth = Math.max(...currentSelectedMonths);
           getMonthlyChecklist({ startMonth: startMonth.toString(), endMonth: endMonth.toString() })
          .then((data) => {
-          // 'flatMap' 대신, 반환된 객체의 'checklists' 배열에 직접 접근
-          // data는 { checklists: [...] } 형태의 객체일 것으로 예상
           if (data && data.checklists) {
-            setMonthlyChecklists(data.checklists); // 👈 이 부분을 수정
+            setMonthlyChecklists(data.checklists); 
           } else {
             console.error("API 응답이 예상한 형식이 아닙니다:", data);
             setMonthlyChecklists([]);
@@ -124,7 +122,7 @@ export default function PastEvent() {
         .then((data) => setEvents(data))
         .catch(console.error);
     } else if (currentSort === "행사별") {
-      const params = currentSelectedCategory !== "ALL" ? { category: currentSelectedCategory } : {};
+      const params = currentSelectedCategory !== "전체" ? { category: currentSelectedCategory } : {};
       getMajorEventChecklist(params)
       .then((data) => setEvents(data))
       .catch(console.error);
