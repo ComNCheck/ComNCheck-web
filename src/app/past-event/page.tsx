@@ -104,10 +104,15 @@ export default function PastEvent() {
         const startMonth = Math.min(...currentSelectedMonths);
         const endMonth = Math.max(...currentSelectedMonths);
           getMonthlyChecklist({ startMonth: startMonth.toString(), endMonth: endMonth.toString() })
-        .then((data) => {
-          // MonthlyChecklistType[]에서 모든 checklists를 평면화
-          const allChecklists = data.flatMap(monthly => monthly.checklists);
-          setMonthlyChecklists(allChecklists);
+         .then((data) => {
+          // 'flatMap' 대신, 반환된 객체의 'checklists' 배열에 직접 접근
+          // data는 { checklists: [...] } 형태의 객체일 것으로 예상
+          if (data && data.checklists) {
+            setMonthlyChecklists(data.checklists); // 👈 이 부분을 수정
+          } else {
+            console.error("API 응답이 예상한 형식이 아닙니다:", data);
+            setMonthlyChecklists([]);
+          }
         })
         .catch(console.error);
       } else {
