@@ -104,10 +104,13 @@ export default function PastEvent() {
         const startMonth = Math.min(...currentSelectedMonths);
         const endMonth = Math.max(...currentSelectedMonths);
           getMonthlyChecklist({ startMonth: startMonth.toString(), endMonth: endMonth.toString() })
-        .then((data) => {
-          // MonthlyChecklistType[]에서 모든 checklists를 평면화
-          const allChecklists = data.flatMap(monthly => monthly.checklists);
-          setMonthlyChecklists(allChecklists);
+         .then((data) => {
+          if (data && data.checklists) {
+            setMonthlyChecklists(data.checklists); 
+          } else {
+            console.error("API 응답이 예상한 형식이 아닙니다:", data);
+            setMonthlyChecklists([]);
+          }
         })
         .catch(console.error);
       } else {
@@ -119,7 +122,7 @@ export default function PastEvent() {
         .then((data) => setEvents(data))
         .catch(console.error);
     } else if (currentSort === "행사별") {
-      const params = currentSelectedCategory !== "ALL" ? { category: currentSelectedCategory } : {};
+      const params = currentSelectedCategory !== "전체" ? { category: currentSelectedCategory } : {};
       getMajorEventChecklist(params)
       .then((data) => setEvents(data))
       .catch(console.error);
