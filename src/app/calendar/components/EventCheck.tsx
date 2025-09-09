@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import {
-  getMajorEvent,
-  getAnotherMajorEvent,
-  majorEventItem,
-} from "@/mock/calendar/api";
+import { getCalendarEvents } from "@/apis/event";
+import { CalendarResponseDTO } from "@/apis/event.type";
+import { majorEventItem } from "@/mock/calendar/api";
 import { FaCirclePlus } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 
@@ -13,12 +11,14 @@ interface EventCheckProps {
   selectedDate?: Date;
   onSelectedEventsChange?: (events: majorEventItem[]) => void;
   showOnlySelected?: boolean;
+  currentMonth?: Date;
 }
 
 export default function EventCheck({
   selectedDate,
   onSelectedEventsChange,
   showOnlySelected = false,
+  currentMonth = new Date(),
 }: EventCheckProps) {
   const router = useRouter();
   const [events, setEvents] = useState<majorEventItem[]>([]);
@@ -39,19 +39,27 @@ export default function EventCheck({
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const [majorEvents, anotherEvents] = await Promise.all([
-          getMajorEvent(),
-          getAnotherMajorEvent(),
-        ]);
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+        
+        const calendarEvents = await getCalendarEvents(year, month);
 
-        const allEvents = [...(majorEvents || []), ...(anotherEvents || [])];
-        setEvents(allEvents);
+        // API 데이터를 majorEventItem 형태로 변환
+        const convertedEvents: majorEventItem[] = calendarEvents.map((event: CalendarResponseDTO) => ({
+          id: event.id,
+          eventName: event.eventName,
+          date: event.startDate,
+          location: event.location,
+          description: event.eventStatus === "FIXED" ? "확정된 행사" : "임시 행사",
+        }));
+
+        setEvents(convertedEvents);
       } catch (e) {
         console.error("행사 데이터 불러오기 실패", e);
       }
     };
     fetchEvents();
-  }, []);
+  }, [currentMonth]);
 
   // 선택된 날짜에 해당하는 이벤트 필터링
   useEffect(() => {

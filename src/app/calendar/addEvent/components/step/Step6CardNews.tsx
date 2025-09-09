@@ -154,11 +154,13 @@ export default function Step6CardNews({
           ) : (
             <div className="space-y-3">
               <div className="relative">
-                <img
-                  src={imagePreview}
-                  alt="업로드된 이미지"
-                  className="w-full h-48 object-cover rounded-lg border border-gray-300"
-                />
+                {imagePreview && (
+                  <img
+                    src={imagePreview}
+                    alt="업로드된 이미지"
+                    className="w-full h-48 object-cover rounded-lg border border-gray-300"
+                  />
+                )}
                 <button
                   onClick={handleRemoveImage}
                   className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"

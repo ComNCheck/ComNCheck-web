@@ -7,6 +7,7 @@ interface CalendarProps {
   mode?: "single";
   selected?: Date | undefined;
   onSelect?: (date: Date | undefined) => void;
+  onMonthChange?: (date: Date) => void;
   month?: Date;
   modifiers?: {
     event?: (date: Date) => boolean;
@@ -21,6 +22,7 @@ export function Calendar({
   mode = "single",
   selected,
   onSelect,
+  onMonthChange,
   month = new Date(),
   modifiers,
   modifiersClassNames,
@@ -96,11 +98,11 @@ export function Calendar({
     >
       <div className="flex justify-between items-center mb-3 gap-2 w-full">
         <button
-          onClick={() =>
-            setCurrentMonth(
-              new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
-            )
-          }
+          onClick={() => {
+            const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1);
+            setCurrentMonth(newMonth);
+            onMonthChange?.(newMonth);
+          }}
           className="p-1 sm:p-2 hover:bg-gray-100 rounded text-gray-600"
         >
           <IoIosArrowBack className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -109,11 +111,11 @@ export function Calendar({
           {currentMonth.getFullYear()}년 {monthNames[currentMonth.getMonth()]}
         </h2>
         <button
-          onClick={() =>
-            setCurrentMonth(
-              new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
-            )
-          }
+          onClick={() => {
+            const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1);
+            setCurrentMonth(newMonth);
+            onMonthChange?.(newMonth);
+          }}
           className="p-1 sm:p-2 hover:bg-gray-100 rounded text-gray-600"
         >
           <IoIosArrowForward className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -131,7 +133,7 @@ export function Calendar({
         ))}
 
         {days.map((day, index) => (
-          <div key={index} className="p-1 text-center">
+          <div key={day ? `${day.getFullYear()}-${day.getMonth()}-${day.getDate()}-${index}` : `empty-${index}`} className="p-1 text-center">
             {day ? (
               <button
                 onClick={() => handleDateClick(day)}

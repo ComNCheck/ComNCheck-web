@@ -23,14 +23,14 @@ interface PastEventItem {
 const categoryMapping: Record<string, CategoryProps | '전체'> = {
   "전체": "ALL",
   "새내기 배움터": "FRESHMAN_ORIENTATION",
-  "개강/종강총회": "MEETING",
+  "개강/종강총회": "FIRST_SEMESTER_OPENING_MEETING",
   "대면식": "FACE_TO_FACE_MEETING",
-  "간식행사": "SNACK_EVENT",
+  "간식행사": "FIRST_SEMESTER_MIDTERM_SNACK",
   "MT": "MT",
   "해오름식": "KICK_OFF",
-  "체전": "SPORTS_DAY",
+  "체전": "COLLEGE_SPORTS_DAY",
   "축제": "FESTIVAL",
-  "홈커밍 데이": "HOME_COMING_DAY",
+  "홈커밍 데이": "HOMECOMING_DAY",
 };
 
 export default function PastEvent() {
@@ -105,8 +105,10 @@ export default function PastEvent() {
         const endMonth = Math.max(...currentSelectedMonths);
           getMonthlyChecklist({ startMonth: startMonth.toString(), endMonth: endMonth.toString() })
          .then((data) => {
-          if (data && data.checklists) {
-            setMonthlyChecklists(data.checklists); 
+          if (data && Array.isArray(data) && data.length > 0 && 'checklists' in data[0]) {
+            setMonthlyChecklists((data[0] as any).checklists); 
+          } else if (data && !Array.isArray(data) && 'checklists' in data) {
+            setMonthlyChecklists((data as any).checklists);
           } else {
             console.error("API 응답이 예상한 형식이 아닙니다:", data);
             setMonthlyChecklists([]);

@@ -113,6 +113,7 @@ export default function EventForm({
 
   // 핸들러 함수들
   const handleCategorySelect = (category: string) => {
+    console.log("🔍 EventForm - 받은 카테고리:", category);
     setEventData((prev) => ({ ...prev, category }));
   };
 
