@@ -1,4 +1,5 @@
 // 이벤트 API 관련 함수들
+import instance from "@/apis/instance";
 
 interface EventData {
   category?: string;
@@ -9,6 +10,7 @@ interface EventData {
   announcement: string;
   googleFormLink: string;
   cardNewsLink: string;
+  cardNewsImages?: File[]; // 이미지 파일들 추가
 }
 
 interface ApiResponse<T> {
@@ -17,95 +19,150 @@ interface ApiResponse<T> {
   message?: string;
 }
 
-// API 기본 URL (환경변수로 관리하는 것이 좋습니다)
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
-
 /**
- * 기존행사 생성
+ * 기존행사 생성 (임시 행사 저장)
  */
 export async function createPastEvent(
   eventData: EventData
 ): Promise<ApiResponse<any>> {
   try {
-    const response = await fetch(`${API_BASE_URL}/past-events`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(eventData),
+    // FormData 생성
+    const formData = new FormData();
+    
+    // 기본 필드들 추가
+    formData.append("eventName", eventData.eventName || "");
+    formData.append("category", eventData.category || "");
+    formData.append("location", eventData.location);
+    formData.append("notice", eventData.announcement);
+    formData.append("googleFormLink", eventData.googleFormLink);
+    formData.append("startDate", eventData.startDate);
+    formData.append("endDate", eventData.endDate);
+    formData.append("time", ""); // 시간 필드 (필요시 추가)
+    
+    // 이미지 파일들 추가
+    if (eventData.cardNewsImages && eventData.cardNewsImages.length > 0) {
+      eventData.cardNewsImages.forEach((image, index) => {
+        formData.append("cardNewsImages", image);
+      });
+    }
+    
+    console.log("📤 FormData 전송:", {
+      eventName: eventData.eventName,
+      category: eventData.category,
+      location: eventData.location,
+      imageCount: eventData.cardNewsImages?.length || 0
     });
-
-    const result = await response.json();
+    
+    const response = await instance.post("/api/v1/major-event/temp", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    
     return {
-      success: response.ok,
-      data: result,
-      message: result.message,
+      success: true,
+      data: response.data,
+      message: response.data.message,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("기존행사 생성 실패:", error);
     return {
       success: false,
-      message: "네트워크 오류가 발생했습니다.",
+      message: error.response?.data?.message || "네트워크 오류가 발생했습니다.",
     };
   }
 }
 
 /**
- * 신규행사 생성
+ * 신규행사 생성 (임시 행사 저장)
  */
 export async function createNewEvent(
   eventData: EventData
 ): Promise<ApiResponse<any>> {
   try {
-    const response = await fetch(`${API_BASE_URL}/new-events`, {
-      method: "POST",
+    // FormData 생성
+    const formData = new FormData();
+    
+    // 기본 필드들 추가
+    formData.append("eventName", eventData.eventName || "");
+    formData.append("category", eventData.category || "");
+    formData.append("location", eventData.location);
+    formData.append("notice", eventData.announcement);
+    formData.append("googleFormLink", eventData.googleFormLink);
+    formData.append("startDate", eventData.startDate);
+    formData.append("endDate", eventData.endDate);
+    formData.append("time", ""); // 시간 필드 (필요시 추가)
+    
+    // 이미지 파일들 추가
+    if (eventData.cardNewsImages && eventData.cardNewsImages.length > 0) {
+      eventData.cardNewsImages.forEach((image, index) => {
+        formData.append("cardNewsImages", image);
+      });
+    }
+    
+    const response = await instance.post("/api/v1/major-event/temp", formData, {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
-      body: JSON.stringify(eventData),
     });
-
-    const result = await response.json();
+    
     return {
-      success: response.ok,
-      data: result,
-      message: result.message,
+      success: true,
+      data: response.data,
+      message: response.data.message,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("신규행사 생성 실패:", error);
     return {
       success: false,
-      message: "네트워크 오류가 발생했습니다.",
+      message: error.response?.data?.message || "네트워크 오류가 발생했습니다.",
     };
   }
 }
 
 /**
- * 기타행사 생성
+ * 기타행사 생성 (임시 행사 저장)
  */
 export async function createAnotherEvent(
   eventData: EventData
 ): Promise<ApiResponse<any>> {
   try {
-    const response = await fetch(`${API_BASE_URL}/another-events`, {
-      method: "POST",
+    // FormData 생성
+    const formData = new FormData();
+    
+    // 기본 필드들 추가
+    formData.append("eventName", eventData.eventName || "");
+    formData.append("category", eventData.category || "");
+    formData.append("location", eventData.location);
+    formData.append("notice", eventData.announcement);
+    formData.append("googleFormLink", eventData.googleFormLink);
+    formData.append("startDate", eventData.startDate);
+    formData.append("endDate", eventData.endDate);
+    formData.append("time", ""); // 시간 필드 (필요시 추가)
+    
+    // 이미지 파일들 추가
+    if (eventData.cardNewsImages && eventData.cardNewsImages.length > 0) {
+      eventData.cardNewsImages.forEach((image, index) => {
+        formData.append("cardNewsImages", image);
+      });
+    }
+    
+    const response = await instance.post("/api/v1/major-event/temp", formData, {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
-      body: JSON.stringify(eventData),
     });
-
-    const result = await response.json();
+    
     return {
-      success: response.ok,
-      data: result,
-      message: result.message,
+      success: true,
+      data: response.data,
+      message: response.data.message,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("기타행사 생성 실패:", error);
     return {
       success: false,
-      message: "네트워크 오류가 발생했습니다.",
+      message: error.response?.data?.message || "네트워크 오류가 발생했습니다.",
     };
   }
 }
