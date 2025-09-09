@@ -84,7 +84,7 @@ export async function createPastEvent(
     
     // 기본 필드들 추가 (Swagger Create 스키마에 맞게)
     formData.append("eventName", eventData.eventName || "");
-    formData.append("category", eventData.category || "MT");
+    formData.append("category", eventData.category || "ETC");
     formData.append("hostType", eventData.hostType || "COMPUTER_SCIENCE");
     formData.append("location", eventData.location);
     formData.append("notice", eventData.announcement);
@@ -159,7 +159,7 @@ export async function createNewEvent(
     
     // 기본 필드들 추가 (Swagger Create 스키마에 맞게)
     formData.append("eventName", eventData.eventName || "");
-    formData.append("category", eventData.category || "MT");
+    formData.append("category", eventData.category || "ETC");
     formData.append("hostType", eventData.hostType || "COMPUTER_SCIENCE");
     formData.append("location", eventData.location);
     formData.append("notice", eventData.announcement);
@@ -228,7 +228,7 @@ export async function createAnotherEvent(
     
     // 기본 필드들 추가 (Swagger Create 스키마에 맞게)
     formData.append("eventName", eventData.eventName || "");
-    formData.append("category", eventData.category || "MT");
+    formData.append("category", eventData.category || "ETC");
     formData.append("hostType", eventData.hostType || "COMPUTER_SCIENCE");
     formData.append("location", eventData.location);
     formData.append("notice", eventData.announcement);
@@ -323,7 +323,7 @@ export async function updatePastEvent(
     
     // 기본 필드들 추가 (Swagger Update 스키마에 맞게)
     formData.append("eventName", eventData.eventName || "");
-    formData.append("category", eventData.category || "MT");
+    formData.append("category", eventData.category || "ETC");
     formData.append("hostType", eventData.hostType || "COMPUTER_SCIENCE");
     formData.append("location", eventData.location);
     formData.append("notice", eventData.announcement);
@@ -373,7 +373,7 @@ export async function updateNewEvent(
     
     // 기본 필드들 추가 (Swagger Update 스키마에 맞게)
     formData.append("eventName", eventData.eventName || "");
-    formData.append("category", eventData.category || "MT");
+    formData.append("category", eventData.category || "ETC");
     formData.append("hostType", eventData.hostType || "COMPUTER_SCIENCE");
     formData.append("location", eventData.location);
     formData.append("notice", eventData.announcement);
@@ -423,7 +423,7 @@ export async function updateAnotherEvent(
     
     // 기본 필드들 추가 (Swagger Update 스키마에 맞게)
     formData.append("eventName", eventData.eventName || "");
-    formData.append("category", eventData.category || "MT");
+    formData.append("category", eventData.category || "ETC");
     formData.append("hostType", eventData.hostType || "COMPUTER_SCIENCE");
     formData.append("location", eventData.location);
     formData.append("notice", eventData.announcement);
