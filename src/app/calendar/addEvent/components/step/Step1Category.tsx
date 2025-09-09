@@ -14,29 +14,33 @@ interface Step1CategoryProps {
 }
 
 const categoryList = [
-  { item: "새내기 배움터", sort: "기존행사" },
-  { item: "1학기 개강총회", sort: "기존행사" },
-  { item: "대면식", sort: "기존행사" },
-  { item: "1학기 중간고사 간식행사", sort: "기존행사" },
-  { item: "1학기 기말고사 간식행사", sort: "기존행사" },
-  { item: "MT", sort: "기존행사" },
-  { item: "1학기 종강총회", sort: "기존행사" },
-  { item: "해오름식", sort: "기존행사" },
-  { item: "공대 체전", sort: "기존행사" },
-  { item: "왕산 체전", sort: "기존행사" },
-  { item: "축제", sort: "기존행사" },
-  { item: "2학기 개강총회", sort: "기존행사" },
-  { item: "2학기 중간고사 간식행사", sort: "기존행사" },
-  { item: "2학기 기말고사 간식행사", sort: "기존행사" },
-  { item: "홈커밍 데이", sort: "기존행사" },
+  { item: "새내기 배움터", sort: "FRESHMAN_ORIENTATION" },
+  { item: "1학기 개강총회", sort: "FIRST_SEMESTER_OPENING_MEETING" },
+  { item: "대면식", sort: "FACE_TO_FACE_MEETING" },
+  { item: "1학기 중간고사 간식행사", sort: "FIRST_SEMESTER_MIDTERM_SNACK" },
+  { item: "1학기 기말고사 간식행사", sort: "FIRST_SEMESTER_FINAL_SNACK" },
+  { item: "MT", sort: "MT" },
+  { item: "1학기 종강총회", sort: "FIRST_SEMESTER_CLOSING_MEETING" },
+  { item: "해오름식", sort: "KICK_OFF" },
+  { item: "공대 체전", sort: "COLLEGE_SPORTS_DAY" },
+  { item: "왕산 체전", sort: "UNIVERSITY_SPORTS_DAY" },
+  { item: "축제", sort: "FESTIVAL" },
+  { item: "2학기 개강총회", sort: "SECOND_SEMESTER_OPENING_MEETING" },
+  { item: "2학기 종강총회", sort: "SECOND_SEMESTER_CLOSING_MEETING" },
+  { item: "2학기 중간고사 간식행사", sort: "SECOND_SEMESTER_MIDTERM_SNACK" },
+  { item: "2학기 기말고사 간식행사", sort: "SECOND_SEMESTER_FINAL_SNACK" },
+  { item: "홈커밍 데이", sort: "HOMECOMING_DAY" },
+  { item: "기타", sort: "ETC" },
 ];
 
 export default function Step1Category({
   onCategorySelect,
   selectedCategory,
 }: Step1CategoryProps) {
-  const handleCategorySelect = (selectedItem: string) => {
-    onCategorySelect(selectedItem);
+  const handleCategorySelect = (selectedEnum: string) => {
+    // Category 컴포넌트에서 이미 영문 enum 값을 전달함
+    console.log("🔍 Step1Category - 받은 영문 enum:", selectedEnum);
+    onCategorySelect(selectedEnum);
   };
 
   return (
@@ -50,7 +54,11 @@ export default function Step1Category({
         </div>
       </div>
 
-      <Category categoryList={categoryList} onSelect={handleCategorySelect} />
+      <Category 
+        categoryList={categoryList} 
+        onSelect={handleCategorySelect}
+        selectedCategory={selectedCategory ? categoryList.find(cat => cat.sort === selectedCategory)?.item : undefined}
+      />
     </div>
   );
 }

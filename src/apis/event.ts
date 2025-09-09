@@ -75,12 +75,15 @@ export const getCalendarEvents = async (year: number, month: number): Promise<Ca
   }
 };
 
-// 임시 행사 저장
+// 임시 행사 저장 (Swagger 스펙에 맞게 구현)
 export const saveTempEvent = async (eventData: CreateEventRequest): Promise<TempEvent> => {
   try {
     const formData = new FormData();
+    
+    // 필수 필드들 추가 (Swagger Create 스키마에 맞게)
     formData.append("eventName", eventData.eventName);
     formData.append("category", eventData.category);
+    formData.append("hostType", eventData.hostType);
     formData.append("location", eventData.location);
     formData.append("notice", eventData.notice);
     formData.append("googleFormLink", eventData.googleFormLink);
@@ -88,30 +91,39 @@ export const saveTempEvent = async (eventData: CreateEventRequest): Promise<Temp
     formData.append("endDate", eventData.endDate);
     formData.append("time", eventData.time);
     
-    // 이미지 파일들 추가
-    eventData.cardNewsImages.forEach((image, index) => {
+    // 이미지 파일들 추가 (cardNewsImages 필드명 사용)
+    eventData.cardNewsImages.forEach((image) => {
       formData.append("cardNewsImages", image);
     });
 
-    const response = await instance.post<TempEvent>("/api/v1/major-event/temp", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    console.log("임시 행사 저장 성공", response);
+    // FormData 내용 로깅
+    console.log("📤 임시 행사 저장 FormData 내용:");
+    for (let [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        console.log(`  ${key}: File(${value.name}, ${value.size}bytes, ${value.type})`);
+      } else {
+        console.log(`  ${key}: ${value}`);
+      }
+    }
+
+    const response = await instance.post<TempEvent>("/api/v1/major-event/temp", formData);
+    console.log("✅ 임시 행사 저장 성공", response);
     return response.data;
   } catch (error) {
-    console.error("임시 행사 저장 실패", error);
+    console.error("❌ 임시 행사 저장 실패", error);
     throw error;
   }
 };
 
-// 임시 행사 수정
+// 임시 행사 수정 (Swagger 스펙에 맞게 구현)
 export const updateTempEvent = async (tempEventId: number, eventData: UpdateEventRequest): Promise<TempEvent> => {
   try {
     const formData = new FormData();
+    
+    // 필수 필드들 추가 (Swagger Update 스키마에 맞게)
     formData.append("eventName", eventData.eventName);
     formData.append("category", eventData.category);
+    formData.append("hostType", eventData.hostType);
     formData.append("location", eventData.location);
     formData.append("notice", eventData.notice);
     formData.append("googleFormLink", eventData.googleFormLink);
@@ -121,24 +133,30 @@ export const updateTempEvent = async (tempEventId: number, eventData: UpdateEven
     formData.append("majorEventId", eventData.majorEventId.toString());
     
     // 기존 이미지 URL들 추가
-    eventData.existingImageUrls.forEach((url, index) => {
+    eventData.existingImageUrls.forEach((url) => {
       formData.append("existingImageUrls", url);
     });
     
     // 새 이미지 파일들 추가
-    eventData.newImages.forEach((image, index) => {
+    eventData.newImages.forEach((image) => {
       formData.append("newImages", image);
     });
 
-    const response = await instance.patch<TempEvent>(`/api/v1/major-event/temp/${tempEventId}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    console.log("임시 행사 수정 성공", response);
+    // FormData 내용 로깅
+    console.log("📤 임시 행사 수정 FormData 내용:");
+    for (let [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        console.log(`  ${key}: File(${value.name}, ${value.size}bytes, ${value.type})`);
+      } else {
+        console.log(`  ${key}: ${value}`);
+      }
+    }
+
+    const response = await instance.patch<TempEvent>(`/api/v1/major-event/temp/${tempEventId}`, formData);
+    console.log("✅ 임시 행사 수정 성공", response);
     return response.data;
   } catch (error) {
-    console.error("임시 행사 수정 실패", error);
+    console.error("❌ 임시 행사 수정 실패", error);
     throw error;
   }
 };
@@ -168,12 +186,15 @@ export const submitAllTempEvents = async (tempEventIds: number[]): Promise<Check
   }
 };
 
-// 확정된 행사 수정
+// 확정된 행사 수정 (Swagger 스펙에 맞게 구현)
 export const updateMajorEvent = async (majorEventId: number, eventData: UpdateEventRequest): Promise<CheckListType> => {
   try {
     const formData = new FormData();
+    
+    // 필수 필드들 추가 (Swagger Update 스키마에 맞게)
     formData.append("eventName", eventData.eventName);
     formData.append("category", eventData.category);
+    formData.append("hostType", eventData.hostType);
     formData.append("location", eventData.location);
     formData.append("notice", eventData.notice);
     formData.append("googleFormLink", eventData.googleFormLink);
@@ -183,24 +204,30 @@ export const updateMajorEvent = async (majorEventId: number, eventData: UpdateEv
     formData.append("majorEventId", eventData.majorEventId.toString());
     
     // 기존 이미지 URL들 추가
-    eventData.existingImageUrls.forEach((url, index) => {
+    eventData.existingImageUrls.forEach((url) => {
       formData.append("existingImageUrls", url);
     });
     
     // 새 이미지 파일들 추가
-    eventData.newImages.forEach((image, index) => {
+    eventData.newImages.forEach((image) => {
       formData.append("newImages", image);
     });
 
-    const response = await instance.put<CheckListType>(`/api/v1/major-event/${majorEventId}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    console.log("확정된 행사 수정 성공", response);
+    // FormData 내용 로깅
+    console.log("📤 확정된 행사 수정 FormData 내용:");
+    for (let [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        console.log(`  ${key}: File(${value.name}, ${value.size}bytes, ${value.type})`);
+      } else {
+        console.log(`  ${key}: ${value}`);
+      }
+    }
+
+    const response = await instance.put<CheckListType>(`/api/v1/major-event/${majorEventId}`, formData);
+    console.log("✅ 확정된 행사 수정 성공", response);
     return response.data;
   } catch (error) {
-    console.error("확정된 행사 수정 실패", error);
+    console.error("❌ 확정된 행사 수정 실패", error);
     throw error;
   }
 };
@@ -226,6 +253,52 @@ export const updateChecklistItemStatus = async (itemId: number, isChecked: boole
     return response.data;
   } catch (error) {
     console.error("체크리스트 항목 상태 변경 실패", error);
+    throw error;
+  }
+};
+
+// ========== Swagger 스펙에 맞는 새로운 임시 행사 저장 API ==========
+
+/**
+ * Swagger 스펙에 맞는 임시 행사 저장 API
+ * @param eventData - Create 스키마에 맞는 행사 데이터
+ * @returns TempEventResponseDTO
+ */
+export const saveTempEventV2 = async (eventData: CreateEventRequest): Promise<TempEvent> => {
+  try {
+    const formData = new FormData();
+    
+    // Swagger Create 스키마의 모든 필수 필드 추가
+    formData.append("eventName", eventData.eventName);
+    formData.append("category", eventData.category);
+    formData.append("hostType", eventData.hostType);
+    formData.append("location", eventData.location);
+    formData.append("notice", eventData.notice);
+    formData.append("googleFormLink", eventData.googleFormLink);
+    formData.append("startDate", eventData.startDate);
+    formData.append("endDate", eventData.endDate);
+    formData.append("time", eventData.time);
+    
+    // 이미지 파일들 추가 (cardNewsImages 필드명 사용)
+    eventData.cardNewsImages.forEach((image) => {
+      formData.append("cardNewsImages", image);
+    });
+
+    // FormData 내용 로깅
+    console.log("📤 Swagger 스펙 임시 행사 저장 FormData 내용:");
+    for (let [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        console.log(`  ${key}: File(${value.name}, ${value.size}bytes, ${value.type})`);
+      } else {
+        console.log(`  ${key}: ${value}`);
+      }
+    }
+
+    const response = await instance.post<TempEvent>("/api/v1/major-event/temp", formData);
+    console.log("✅ Swagger 스펙 임시 행사 저장 성공", response);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Swagger 스펙 임시 행사 저장 실패", error);
     throw error;
   }
 };

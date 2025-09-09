@@ -9,14 +9,22 @@ export interface CheckListType{//연도별, 행사별
 
 export type CategoryProps = "ALL"|
     "FRESHMAN_ORIENTATION"|
-    "MEETING" |
+    "FIRST_SEMESTER_OPENING_MEETING" |
+    "FIRST_SEMESTER_CLOSING_MEETING" |
+    "SECOND_SEMESTER_OPENING_MEETING" |
+    "SECOND_SEMESTER_CLOSING_MEETING" |
     "FACE_TO_FACE_MEETING" |
-    "SNACK_EVENT" |
+    "FIRST_SEMESTER_MIDTERM_SNACK" |
+    "FIRST_SEMESTER_FINAL_SNACK" |
+    "SECOND_SEMESTER_MIDTERM_SNACK" |
+    "SECOND_SEMESTER_FINAL_SNACK" |
     "MT" | 
     "KICK_OFF" |
-    "SPORTS_DAY" |
+    "COLLEGE_SPORTS_DAY" |
+    "UNIVERSITY_SPORTS_DAY" |
     "FESTIVAL" |
-    "HOME_COMING_DAY" 
+    "HOMECOMING_DAY" |
+    "ETC" 
 
 // Tip 객체 타입 정의
 export interface Tip {
@@ -87,29 +95,31 @@ export interface TempEvent {
   cardNewsImageUrls: string[];
 }
 
-// 행사 생성 요청 타입
+// Swagger 스펙에 맞는 행사 생성 요청 타입 (Create 스키마)
 export interface CreateEventRequest {
   eventName: string;
-  category: string;
+  category: "FRESHMAN_ORIENTATION" | "FIRST_SEMESTER_OPENING_MEETING" | "FIRST_SEMESTER_CLOSING_MEETING" | "SECOND_SEMESTER_OPENING_MEETING" | "SECOND_SEMESTER_CLOSING_MEETING" | "FACE_TO_FACE_MEETING" | "FIRST_SEMESTER_MIDTERM_SNACK" | "FIRST_SEMESTER_FINAL_SNACK" | "SECOND_SEMESTER_MIDTERM_SNACK" | "SECOND_SEMESTER_FINAL_SNACK" | "MT" | "KICK_OFF" | "COLLEGE_SPORTS_DAY" | "UNIVERSITY_SPORTS_DAY" | "FESTIVAL" | "HOMECOMING_DAY" | "ETC";
+  hostType: "COMPUTER_SCIENCE" | "ETC";
   location: string;
   notice: string;
   googleFormLink: string;
-  startDate: string;
-  endDate: string;
-  time: string;
+  startDate: string; // YYYY-MM-DD 형식
+  endDate: string; // YYYY-MM-DD 형식
+  time: string; // HH:mm:ss 형식
   cardNewsImages: File[];
 }
 
-// 행사 수정 요청 타입
+// Swagger 스펙에 맞는 행사 수정 요청 타입 (Update 스키마)
 export interface UpdateEventRequest {
   eventName: string;
-  category: string;
+  category: "FRESHMAN_ORIENTATION" | "FIRST_SEMESTER_OPENING_MEETING" | "FIRST_SEMESTER_CLOSING_MEETING" | "SECOND_SEMESTER_OPENING_MEETING" | "SECOND_SEMESTER_CLOSING_MEETING" | "FACE_TO_FACE_MEETING" | "FIRST_SEMESTER_MIDTERM_SNACK" | "FIRST_SEMESTER_FINAL_SNACK" | "SECOND_SEMESTER_MIDTERM_SNACK" | "SECOND_SEMESTER_FINAL_SNACK" | "MT" | "KICK_OFF" | "COLLEGE_SPORTS_DAY" | "UNIVERSITY_SPORTS_DAY" | "FESTIVAL" | "HOMECOMING_DAY" | "ETC";
+  hostType: "COMPUTER_SCIENCE" | "ETC";
   location: string;
   notice: string;
   googleFormLink: string;
-  startDate: string;
-  endDate: string;
-  time: string;
+  startDate: string; // YYYY-MM-DD 형식
+  endDate: string; // YYYY-MM-DD 형식
+  time: string; // HH:mm:ss 형식
   majorEventId: number;
   existingImageUrls: string[];
   newImages: File[];
