@@ -1,31 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TitleAndDescription from "@/components/TitleAndDescription";
 import CalendarComponent from "./components/Calendar";
 import EventCheck from "./components/EventCheck";
 import Notification from "@/components/ui/notification";
 import { majorEventItem } from "@/mock/calendar/api";
+import { submitAllTempEvents } from "@/apis/event";
 
 export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedEvents, setSelectedEvents] = useState<majorEventItem[]>([]);
   const [showOnlySelected, setShowOnlySelected] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const handleSelectedEventsChange = (events: majorEventItem[]) => {
     setSelectedEvents(events);
   };
 
-  const handleFixButtonClick = () => {
+  const handleFixButtonClick = async () => {
     if (selectedEvents.length > 0) {
-      setShowOnlySelected(true);
-      setShowNotification(true);
+      try {
+        // 선택된 이벤트들의 ID를 추출하여 API 호출
+        const tempEventIds = selectedEvents.map(event => event.id);
+        await submitAllTempEvents(tempEventIds);
+        
+        setShowOnlySelected(true);
+        setShowNotification(true);
+      } catch (error) {
+        console.error("행사 확정 실패:", error);
+        // 에러 처리 로직 추가 가능
+      }
     }
   };
 
   const handleResetView = () => {
     setShowOnlySelected(false);
+  };
+
+  const handleMonthChange = (month: Date) => {
+    setCurrentMonth(month);
   };
 
   return (
@@ -46,6 +61,7 @@ export default function Calendar() {
               onDateSelect={setSelectedDate}
               selectedEvents={selectedEvents}
               showOnlySelected={showOnlySelected}
+              onMonthChange={handleMonthChange}
             />
           </div>
 
@@ -55,6 +71,7 @@ export default function Calendar() {
               selectedDate={selectedDate}
               onSelectedEventsChange={handleSelectedEventsChange}
               showOnlySelected={showOnlySelected}
+              currentMonth={currentMonth}
             />
           </div>
         </div>
